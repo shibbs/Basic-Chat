@@ -66,7 +66,8 @@
           peripheralArray.removeAll()
           rssiArray.removeAll()
           // Start Scanning
-          centralManager?.scanForPeripherals(withServices: [CBUUIDs.BLEService_UUID])
+          print("Started startScanning");
+          centralManager?.scanForPeripherals(withServices: [])//[CBUUIDs.BLEService_UUID])
           scanningLabel.text = "Scanning..."
           scanningButton.isEnabled = false
           Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
@@ -79,6 +80,7 @@
         peripheralArray.removeAll()
         rssiArray.removeAll()
         // Start Scanning
+          print("Started ScanForBLEDevice");
         centralManager?.scanForPeripherals(withServices: [] , options: [CBCentralManagerScanOptionAllowDuplicatesKey:true])
         scanningLabel.text = "Scanning..."
 
@@ -155,10 +157,11 @@
         print("Function: \(#function),Line: \(#line)")
 
         bluefruitPeripheral = peripheral
-
+        print("Peripheral found");
+          let p_name = peripheral.name ?? ""; //get the name and cast to null if empty
         if peripheralArray.contains(peripheral) {
             print("Duplicate Found.")
-        } else {
+        } else if(p_name.contains( "Tynt_Demo")){
           peripheralArray.append(peripheral)
           rssiArray.append(RSSI)
         }
@@ -175,7 +178,7 @@
       // MARK: - Connect
       func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
           stopScanning()
-          bluefruitPeripheral.discoverServices([CBUUIDs.BLEService_UUID])
+          bluefruitPeripheral.discoverServices([])
       }
   }
 
