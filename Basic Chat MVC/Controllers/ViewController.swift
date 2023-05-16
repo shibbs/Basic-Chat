@@ -164,15 +164,16 @@
         } else if(p_name.contains( "Tynt_Demo")){
           peripheralArray.append(peripheral)
           rssiArray.append(RSSI)
+            peripheralFoundLabel.text = "Peripherals Found: \(peripheralArray.count)"
+
+            bluefruitPeripheral.delegate = self
+
+            print("Peripheral Discovered: \(peripheral)")
+
+            self.tableView.reloadData()
         }
 
-        peripheralFoundLabel.text = "Peripherals Found: \(peripheralArray.count)"
-
-        bluefruitPeripheral.delegate = self
-
-        print("Peripheral Discovered: \(peripheral)")
-
-        self.tableView.reloadData()
+        
       }
 
       // MARK: - Connect
