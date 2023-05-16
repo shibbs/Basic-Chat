@@ -67,7 +67,7 @@
           rssiArray.removeAll()
           // Start Scanning
           print("Started startScanning");
-          centralManager?.scanForPeripherals(withServices: [])//[CBUUIDs.BLEService_UUID])
+          centralManager?.scanForPeripherals(withServices: []) //CBUUIDs.BLEService_UUID])
           scanningLabel.text = "Scanning..."
           scanningButton.isEnabled = false
           Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
@@ -178,7 +178,7 @@
       // MARK: - Connect
       func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
           stopScanning()
-          bluefruitPeripheral.discoverServices([])
+          bluefruitPeripheral.discoverServices([CBUUIDs.BLEService_UUID])
       }
   }
 
@@ -205,7 +205,7 @@
 
       for characteristic in characteristics {
 
-        if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Rx)  {
+        if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Goal_Perc)  {
 
           rxCharacteristic = characteristic
 
@@ -217,11 +217,13 @@
           print("RX Characteristic: \(rxCharacteristic.uuid)")
         }
 
-        if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Tx){
+        if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_SOT_Perc){
           txCharacteristic = characteristic
           BlePeripheral.connectedTXChar = txCharacteristic
           print("TX Characteristic: \(txCharacteristic.uuid)")
         }
+          
+          
       }
       delayedConnection()
    }
@@ -239,9 +241,10 @@
 
         characteristicASCIIValue = ASCIIstring
 
-      print("Value Recieved: \((characteristicASCIIValue as String))")
+        print("Value Recieved: ");
+        print(characteristicValue);
 
-      NotificationCenter.default.post(name:NSNotification.Name(rawValue: "Notify"), object: "\((characteristicASCIIValue as String))")
+      NotificationCenter.default.post(name:NSNotification.Name(rawValue: "Notify"), object: characteristicValue as Data)
     }
 
     func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {

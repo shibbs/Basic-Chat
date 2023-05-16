@@ -44,6 +44,7 @@ class ConsoleViewController: UIViewController {
   }
 
   @objc func appendRxDataToTextView(notification: Notification) -> Void{
+      
     consoleTextView.text.append("\n[Recv]: \(notification.object!) \n")
   }
 
@@ -85,12 +86,21 @@ class ConsoleViewController: UIViewController {
   }
 
   // Write functions
-  func writeOutgoingValue(data: String){
-      let valueString = (data as NSString).data(using: String.Encoding.utf8.rawValue)
+  func writeOutgoingValue(value: inout Int){
+//      let intValue = 0;
+//      let valueString = (data as NSString).data(using: String.Encoding.utf8.rawValue)
+//      if let utf8Data = data.data(using: .utf8),
+//          let intValue = Int(String(data: utf8Data, encoding: .utf8)!) {
+//              print("Converted integer value:", intValue)
+//      }else {
+//          return;
+//      }
+      
+      let data = Data(bytes: &value, count: 1)
       //change the "data" to valueString
     if let blePeripheral = BlePeripheral.connectedPeripheral {
           if let txCharacteristic = BlePeripheral.connectedTXChar {
-              blePeripheral.writeValue(valueString!, for: txCharacteristic, type: CBCharacteristicWriteType.withResponse)
+              blePeripheral.writeValue(data, for: txCharacteristic, type: CBCharacteristicWriteType.withResponse)
           }
       }
   }
@@ -139,7 +149,28 @@ extension ConsoleViewController: UITextViewDelegate {
 extension ConsoleViewController: UITextFieldDelegate {
 
   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-    writeOutgoingValue(data: textField.text ?? "")
+      
+      if let text = textField.text {
+          let scanner = Scanner(string: text)
+          var intValue: Int = 0
+          scanner.scanInt(&intValue)
+          
+          if scanner.isAtEnd {
+              // The first integer value was successfully extracted
+              print("First integer value:", intValue)
+              writeOutgoingValue(value: &intValue)
+          } else {
+              // No integer value found or other text follows the integer
+              print("No integer value found or invalid format.")
+          }
+      } else {
+          // TextField is empty
+          print("TextField is empty.")
+      }
+
+      
+      
+    
     appendTxDataToTextView()
     textField.resignFirstResponder()
     textField.text = ""
