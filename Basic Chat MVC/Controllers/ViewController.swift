@@ -4,7 +4,6 @@
   //
   //  Created by Trevor Beaton on 2/3/21.
   //
-  // test text 4 - test Xcode commit
 
   import UIKit
   import CoreBluetooth
