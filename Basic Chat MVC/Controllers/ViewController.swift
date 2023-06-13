@@ -110,7 +110,7 @@
 
         let detailViewController = storyboard.instantiateViewController(withIdentifier: "ConsoleViewController") as! ConsoleViewController
 
-        self.navigationController?.pushViewController(detailViewController, animated: true)
+        // self.navigationController?.pushViewController(detailViewController, animated: true)
       })
     }
   }
