@@ -21,7 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		29A1DF4525CB1D7F000A9A84 /* Basic Chat MVC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Basic Chat MVC.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		29A1DF4525CB1D7F000A9A84 /* Tynt Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tynt Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		29A1DF4825CB1D7F000A9A84 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		29A1DF4A25CB1D7F000A9A84 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		29A1DF4C25CB1D7F000A9A84 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -85,7 +85,7 @@
 		29A1DF4625CB1D7F000A9A84 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				29A1DF4525CB1D7F000A9A84 /* Basic Chat MVC.app */,
+				29A1DF4525CB1D7F000A9A84 /* Tynt Demo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -109,9 +109,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		29A1DF4425CB1D7F000A9A84 /* Basic Chat MVC */ = {
+		29A1DF4425CB1D7F000A9A84 /* Tynt Demo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 29A1DF5925CB1D82000A9A84 /* Build configuration list for PBXNativeTarget "Basic Chat MVC" */;
+			buildConfigurationList = 29A1DF5925CB1D82000A9A84 /* Build configuration list for PBXNativeTarget "Tynt Demo" */;
 			buildPhases = (
 				29A1DF4125CB1D7F000A9A84 /* Sources */,
 				29A1DF4225CB1D7F000A9A84 /* Frameworks */,
@@ -121,9 +121,9 @@
 			);
 			dependencies = (
 			);
-			name = "Basic Chat MVC";
+			name = "Tynt Demo";
 			productName = "Basic Chat MVC";
-			productReference = 29A1DF4525CB1D7F000A9A84 /* Basic Chat MVC.app */;
+			productReference = 29A1DF4525CB1D7F000A9A84 /* Tynt Demo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -140,7 +140,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 29A1DF4025CB1D7F000A9A84 /* Build configuration list for PBXProject "Basic Chat MVC" */;
+			buildConfigurationList = 29A1DF4025CB1D7F000A9A84 /* Build configuration list for PBXProject "Tynt Demo" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -153,7 +153,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				29A1DF4425CB1D7F000A9A84 /* Basic Chat MVC */,
+				29A1DF4425CB1D7F000A9A84 /* Tynt Demo */,
 			);
 		};
 /* End PBXProject section */
@@ -334,6 +334,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MGBUQ7Y8U7;
 				INFOPLIST_FILE = "Basic Chat MVC/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Tynt;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -355,6 +357,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MGBUQ7Y8U7;
 				INFOPLIST_FILE = "Basic Chat MVC/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Tynt;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -370,7 +374,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		29A1DF4025CB1D7F000A9A84 /* Build configuration list for PBXProject "Basic Chat MVC" */ = {
+		29A1DF4025CB1D7F000A9A84 /* Build configuration list for PBXProject "Tynt Demo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				29A1DF5725CB1D82000A9A84 /* Debug */,
@@ -379,7 +383,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		29A1DF5925CB1D82000A9A84 /* Build configuration list for PBXNativeTarget "Basic Chat MVC" */ = {
+		29A1DF5925CB1D82000A9A84 /* Build configuration list for PBXNativeTarget "Tynt Demo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				29A1DF5A25CB1D82000A9A84 /* Debug */,
