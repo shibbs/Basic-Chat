@@ -17,26 +17,18 @@ class Prime_Interface: UIViewController {
         // Do any additional setup after loading the view.
         
         slider.transform = CGAffineTransform(rotationAngle: CGFloat.pi / -2)
+        tintValue.text = "50% Tint"
     }
     
     //MARK: Outlets
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var status: UILabel!
-    
-    
+    @IBOutlet weak var settings: UIButton!
+    @IBOutlet weak var tintValue: UILabel!
     
     // MARK: - Functions
     
-    func writeOutgoingValue(value: inout Int){
-  //      let intValue = 0;
-  //      let valueString = (data as NSString).data(using: String.Encoding.utf8.rawValue)
-  //      if let utf8Data = data.data(using: .utf8),
-  //          let intValue = Int(String(data: utf8Data, encoding: .utf8)!) {
-  //              print("Converted integer value:", intValue)
-  //      }else {
-  //          return;
-  //      }
-        
+    func writeOutgoingValue(value: inout Int) {
         let data = Data(bytes: &value, count: 1)
         //change the "data" to valueString
       if let blePeripheral = BlePeripheral.connectedPeripheral {
@@ -45,6 +37,17 @@ class Prime_Interface: UIViewController {
             }
         }
     }
+    
+    
+    @IBAction func writeValue(_ sender: UISlider) {
+        var val = Int(round(slider.value))
+        writeOutgoingValue(value: &val)
+        
+        tintValue.text = String(val) + "% Tint"
+    }
+    
+    
+    
     
     
     
