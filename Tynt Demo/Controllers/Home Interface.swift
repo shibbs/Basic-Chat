@@ -9,22 +9,32 @@ import UIKit
 import SwiftUI
 import CoreBluetooth
 
-class Prime_Interface: UIViewController {
+class Home_Interface: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //NotificationCenter.default.addObserver(self, selector: //#selector(self.showReceivedValue(notification:)), name: NSNotification.Name(rawValue: //"Notify"), object: nil)
 
         // Do any additional setup after loading the view.
         
         slider.transform = CGAffineTransform(rotationAngle: CGFloat.pi / -2)
-        tintValue.text = "50% Tint"
+        tintValue.text = "0% Tint"
+        
+        statusFromCharacteristic = "Idle"
+        statusText.text = statusFromCharacteristic + ": "
+        
+        settings.setTitle("", for: .normal)
     }
     
-    //MARK: Outlets
+    //MARK: Outlets/Variables
+    
     @IBOutlet weak var slider: UISlider!
-    @IBOutlet weak var status: UILabel!
+    @IBOutlet weak var statusText: UILabel!
     @IBOutlet weak var settings: UIButton!
     @IBOutlet weak var tintValue: UILabel!
+    @IBOutlet weak var statusValue: UILabel!
+    private var statusFromCharacteristic: String!
     
     // MARK: - Functions
     
@@ -46,20 +56,27 @@ class Prime_Interface: UIViewController {
         tintValue.text = String(val) + "% Tint"
     }
     
+    //@objc func showReceivedValue(notification: Notification) -> Void{
+    
+      //  var temp = String(notification.object!)
+      //  statusValue.text = (notification.object!).String!
+    //}
+    
     
     
     
     
     
 
-    /*
+    
     // MARK: - Navigation
+     
+     @IBAction func returnToHome(segue: UIStoryboardSegue) { // exists for unwind segue
+     }
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    // override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
-    }
-    */
-
+    // }
 }
