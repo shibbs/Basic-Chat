@@ -24,13 +24,16 @@
       @IBOutlet weak var peripheralFoundLabel: UILabel!
       @IBOutlet weak var scanningLabel: UILabel!
       @IBOutlet weak var scanningButton: UIButton!
-
+      @IBOutlet weak var backButton: UIButton!
+      
       @IBAction func scanningAction(_ sender: Any) {
       startScanning()
     }
 
       override func viewDidLoad() {
         super.viewDidLoad()
+          
+          backButton.setTitle("", for: .normal)
 
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -109,8 +112,9 @@
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
 
         let detailViewController = storyboard.instantiateViewController(withIdentifier: "ConsoleViewController") as! ConsoleViewController
+          
+          self.performSegue(withIdentifier: "pairingToHome", sender: nil)
 
-        // self.navigationController?.pushViewController(detailViewController, animated: true)
       })
     }
   }
@@ -322,5 +326,8 @@
           connectToDevice()
 
       }
+      
+      // MARK: - Navigation
+      
   }
 
