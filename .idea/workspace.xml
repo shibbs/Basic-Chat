@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1f9267ed-3482-496b-b241-a4fcd44bccd4" name="Changes" comment="test note 3">
-      <change beforePath="$PROJECT_DIR$/Basic Chat MVC/Controllers/ViewController.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Basic Chat MVC/Controllers/ViewController.swift" afterDir="false" />
-    </list>
+    <list default="true" id="1f9267ed-3482-496b-b241-a4fcd44bccd4" name="Changes" comment="test note 3" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
