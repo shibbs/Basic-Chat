@@ -20,13 +20,10 @@ class ConsoleViewController: UIViewController {
   @IBOutlet weak var consoleTextView: UITextView!
   @IBOutlet weak var consoleTextField: UITextField!
   @IBOutlet weak var txLabel: UILabel!
-  @IBOutlet weak var backButton: UIButton!
   @IBOutlet weak var rxLabel: UILabel!
 
   override func viewDidLoad() {
       super.viewDidLoad()
-      
-      backButton.setTitle("", for: .normal)
 
     keyboardNotifications()
 
@@ -185,7 +182,5 @@ extension ConsoleViewController: UITextFieldDelegate {
     textField.clearsOnBeginEditing = true
     return true
   }
-    
-    // MARK: - Navigation
-    
+
 }
