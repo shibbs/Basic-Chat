@@ -13,8 +13,8 @@
       // Data
       private var centralManager: CBCentralManager!
       private var bluefruitPeripheral: CBPeripheral!
-      private var txCharacteristic: CBCharacteristic!
-      private var rxCharacteristic: CBCharacteristic!
+      private var sot_Characteristic: CBCharacteristic!
+      private var goal_percent_Char: CBCharacteristic!
       private var peripheralArray: [CBPeripheral] = []
       private var rssiArray = [NSNumber]()
       private var timer = Timer()
@@ -67,7 +67,7 @@
           rssiArray.removeAll()
           // Start Scanning
           print("Started startScanning");
-          centralManager?.scanForPeripherals(withServices: []) //CBUUIDs.BLEService_UUID])
+          centralManager?.scanForPeripherals(withServices: [CBUUIDs.BLEService_UUID,CBUUIDs.BLEService_UUID ])
           scanningLabel.text = "Scanning..."
           scanningButton.isEnabled = false
           Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
@@ -193,7 +193,9 @@
         for service in services {
           peripheral.discoverCharacteristics(nil, for: service)
         }
-        BlePeripheral.connectedService = services[0]
+        BlePeripheral.tynt_control_Service = services[0] //TODO Here we need to set up the services properly
+        BlePeripheral.tynt_sensor_Service = services[1] //TODO Here we need to set up the services properly
+          
       }
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
@@ -208,20 +210,20 @@
 
         if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Goal_Perc)  {
 
-          rxCharacteristic = characteristic
+          goal_percent_Char = characteristic
 
-          BlePeripheral.connectedRXChar = rxCharacteristic
+          BlePeripheral.goal_percent_Characteristic = goal_percent_Char
 
-          peripheral.setNotifyValue(true, for: rxCharacteristic!)
+          peripheral.setNotifyValue(true, for: goal_percent_Char!)
           peripheral.readValue(for: characteristic)
 
-          print("RX Characteristic: \(rxCharacteristic.uuid)")
+          print("RX Characteristic: \(goal_percent_Char.uuid)")
         }
 
         if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_SOT_Perc){
-          txCharacteristic = characteristic
-          BlePeripheral.connectedTXChar = txCharacteristic
-          print("TX Characteristic: \(txCharacteristic.uuid)")
+          sot_Characteristic = characteristic
+          BlePeripheral.sot_Char = sot_Characteristic
+          print("TX Characteristic: \(sot_Characteristic.uuid)")
         }
           
           
@@ -234,8 +236,9 @@
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
 
       var characteristicASCIIValue = NSString()
-
-      guard characteristic == rxCharacteristic,
+        //TODO flesh this out with our new read/notify characteristics
+        //change to ifs
+      guard characteristic == goal_percent_Char, //we need to rename this to sot_char, steve's error
 
             let characteristicValue = characteristic.value,
             let ASCIIstring = NSString(data: characteristicValue, encoding: String.Encoding.utf8.rawValue) else { return }
@@ -244,8 +247,10 @@
 
         print("Value Recieved: ");
         print(characteristicValue);
-
-      NotificationCenter.default.post(name:NSNotification.Name(rawValue: "Notify"), object: characteristicValue as Data)
+        //Set up a notification for the state of tint
+      NotificationCenter.default.post(name:NSNotification.Name(rawValue: "Notify_Sot"), object: characteristicValue as Data)
+        
+        //TODO set up more notifiers in this layer
     }
 
     func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {

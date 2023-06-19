@@ -13,7 +13,7 @@ class ConsoleViewController: UIViewController {
   //Data
   var peripheralManager: CBPeripheralManager?
   var peripheral: CBPeripheral?
-  var periperalTXCharacteristic: CBCharacteristic?
+  var periperalsot_Characteristic: CBCharacteristic?
 
   @IBOutlet weak var peripheralLabel: UILabel!
   @IBOutlet weak var serviceLabel: UILabel!
@@ -27,16 +27,16 @@ class ConsoleViewController: UIViewController {
 
     keyboardNotifications()
 
-    NotificationCenter.default.addObserver(self, selector: #selector(self.appendRxDataToTextView(notification:)), name: NSNotification.Name(rawValue: "Notify"), object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(self.appendRxDataToTextView(notification:)), name: NSNotification.Name(rawValue: "Notify_Sot"), object: nil)
 
     consoleTextField.delegate = self
 
     peripheralLabel.text = BlePeripheral.connectedPeripheral?.name
 
-    txLabel.text = "TX:\(String(BlePeripheral.connectedTXChar!.uuid.uuidString))"
-    rxLabel.text = "RX:\(String(BlePeripheral.connectedRXChar!.uuid.uuidString))"
+    txLabel.text = "TX:\(String(BlePeripheral.sot_Char!.uuid.uuidString))"
+    rxLabel.text = "RX:\(String(BlePeripheral.goal_percent_Characteristic!.uuid.uuidString))"
 
-    if let service = BlePeripheral.connectedService {
+    if let service = BlePeripheral.tynt_control_Service {
       serviceLabel.text = "Number of Services: \(String((BlePeripheral.connectedPeripheral?.services!.count)!))"
     } else{
       print("Service was not found")
@@ -99,8 +99,8 @@ class ConsoleViewController: UIViewController {
       let data = Data(bytes: &value, count: 1)
       //change the "data" to valueString
     if let blePeripheral = BlePeripheral.connectedPeripheral {
-          if let txCharacteristic = BlePeripheral.connectedTXChar {
-              blePeripheral.writeValue(data, for: txCharacteristic, type: CBCharacteristicWriteType.withResponse)
+          if let sot_Characteristic = BlePeripheral.sot_Char {
+              blePeripheral.writeValue(data, for: sot_Characteristic, type: CBCharacteristicWriteType.withResponse)
           }
       }
   }
@@ -109,7 +109,7 @@ class ConsoleViewController: UIViewController {
     var val = incomingValue
 
     let outgoingData = NSData(bytes: &val, length: MemoryLayout<Int8>.size)
-    peripheral?.writeValue(outgoingData as Data, for: BlePeripheral.connectedTXChar!, type: CBCharacteristicWriteType.withResponse)
+    peripheral?.writeValue(outgoingData as Data, for: BlePeripheral.sot_Char!, type: CBCharacteristicWriteType.withResponse)
   }
 }
 

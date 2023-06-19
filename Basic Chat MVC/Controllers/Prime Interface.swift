@@ -40,8 +40,8 @@ class Prime_Interface: UIViewController {
         let data = Data(bytes: &value, count: 1)
         //change the "data" to valueString
       if let blePeripheral = BlePeripheral.connectedPeripheral {
-            if let txCharacteristic = BlePeripheral.connectedTXChar {
-                blePeripheral.writeValue(data, for: txCharacteristic, type: CBCharacteristicWriteType.withResponse)
+            if let sot_Characteristic = BlePeripheral.sot_Char {
+                blePeripheral.writeValue(data, for: sot_Characteristic, type: CBCharacteristicWriteType.withResponse)
             }
         }
     }
