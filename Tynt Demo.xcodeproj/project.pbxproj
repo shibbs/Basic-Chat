@@ -332,7 +332,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = MGBUQ7Y8U7;
+				DEVELOPMENT_TEAM = 5N3A4GHFH9;
 				INFOPLIST_FILE = "Basic Chat MVC/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Tynt;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
@@ -341,7 +341,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Adafruit.Industries.Basic-Chat";
+				PRODUCT_BUNDLE_IDENTIFIER = ArjunDalwadi.TyntBLE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -355,7 +355,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = MGBUQ7Y8U7;
+				DEVELOPMENT_TEAM = 5N3A4GHFH9;
 				INFOPLIST_FILE = "Basic Chat MVC/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Tynt;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
@@ -364,7 +364,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Adafruit.Industries.Basic-Chat";
+				PRODUCT_BUNDLE_IDENTIFIER = ArjunDalwadi.TyntBLE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

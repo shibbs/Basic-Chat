@@ -1,8 +1,7 @@
 //
 //  TableViewCell.swift
-//  Basic Chat MVC
 //
-//  Created by Trevor Beaton on 2/4/21.
+//  Created by Arjun on 6/11/23.
 //
 
 import UIKit
