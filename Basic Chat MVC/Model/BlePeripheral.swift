@@ -1,8 +1,7 @@
 //
 //  BlePeripheral.swift
-//  Basic Chat MVC
 //
-//  Created by Trevor Beaton on 2/14/21.
+//  Created by Arjun on 6/11/23.
 //
 
 import Foundation

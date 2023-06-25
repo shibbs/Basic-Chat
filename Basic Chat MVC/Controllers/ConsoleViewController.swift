@@ -1,9 +1,5 @@
-//
-//  ConsoleViewController.swift
-//  Basic Chat
-//
-//  Created by Trevor Beaton on 2/6/21.
-//
+
+// associated with "Sensor Data Interface"
 
 import UIKit
 import CoreBluetooth
@@ -19,15 +15,18 @@ class ConsoleViewController: UIViewController {
   @IBOutlet weak var serviceLabel: UILabel!
   @IBOutlet weak var consoleTextView: UITextView!
   @IBOutlet weak var consoleTextField: UITextField!
-  @IBOutlet weak var txLabel: UILabel!
+    @IBOutlet weak var homeButton: UIButton!
+    @IBOutlet weak var txLabel: UILabel!
   @IBOutlet weak var rxLabel: UILabel!
 
   override func viewDidLoad() {
       super.viewDidLoad()
+      
+      homeButton.setTitle("", for: .normal)
 
     keyboardNotifications()
 
-    NotificationCenter.default.addObserver(self, selector: #selector(self.appendRxDataToTextView(notification:)), name: NSNotification.Name(rawValue: "Notify"), object: nil)
+//    NotificationCenter.default.addObserver(self, selector: #selector(self.appendRxDataToTextView(notification:)), name: NSNotification.Name(rawValue: "Notify"), object: nil)
 
     consoleTextField.delegate = self
 
@@ -43,7 +42,11 @@ class ConsoleViewController: UIViewController {
     }
   }
 
-  @objc func appendRxDataToTextView(notification: Notification) -> Void{
+    @IBAction func backToHome(_ sender: Any) {
+        performSegue(withIdentifier: "returnToHome", sender: nil)
+    }
+    
+    @objc func appendRxDataToTextView(notification: Notification) -> Void{
       
     consoleTextView.text.append("\n[Recv]: \(notification.object!) \n")
   }
@@ -182,5 +185,9 @@ extension ConsoleViewController: UITextFieldDelegate {
     textField.clearsOnBeginEditing = true
     return true
   }
-
+    
+    // MARK: - Navigation
+    
+    
+    
 }
