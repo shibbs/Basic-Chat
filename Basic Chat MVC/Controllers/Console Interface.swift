@@ -9,7 +9,7 @@ class ConsoleViewController: UIViewController {
   //Data
   var peripheralManager: CBPeripheralManager?
   var peripheral: CBPeripheral?
-  var periperalTXCharacteristic: CBCharacteristic?
+  var periperalgoalTintCharic: CBCharacteristic?
 
   @IBOutlet weak var peripheralLabel: UILabel!
   @IBOutlet weak var serviceLabel: UILabel!
@@ -32,8 +32,8 @@ class ConsoleViewController: UIViewController {
 
     peripheralLabel.text = BlePeripheral.connectedPeripheral?.name
 
-    txLabel.text = "TX:\(String(BlePeripheral.connectedTXChar!.uuid.uuidString))"
-    rxLabel.text = "RX:\(String(BlePeripheral.connectedRXChar!.uuid.uuidString))"
+    txLabel.text = "TX:\(String(BlePeripheral.goalTintChar!.uuid.uuidString))"
+    rxLabel.text = "RX:\(String(BlePeripheral.SOTChar!.uuid.uuidString))"
 
     if let service = BlePeripheral.connectedService {
       serviceLabel.text = "Number of Services: \(String((BlePeripheral.connectedPeripheral?.services!.count)!))"
@@ -102,8 +102,8 @@ class ConsoleViewController: UIViewController {
       let data = Data(bytes: &value, count: 1)
       //change the "data" to valueString
     if let blePeripheral = BlePeripheral.connectedPeripheral {
-          if let txCharacteristic = BlePeripheral.connectedTXChar {
-              blePeripheral.writeValue(data, for: txCharacteristic, type: CBCharacteristicWriteType.withResponse)
+          if let goalTintCharic = BlePeripheral.goalTintChar {
+              blePeripheral.writeValue(data, for: goalTintCharic, type: CBCharacteristicWriteType.withResponse)
           }
       }
   }
@@ -112,7 +112,7 @@ class ConsoleViewController: UIViewController {
     var val = incomingValue
 
     let outgoingData = NSData(bytes: &val, length: MemoryLayout<Int8>.size)
-    peripheral?.writeValue(outgoingData as Data, for: BlePeripheral.connectedTXChar!, type: CBCharacteristicWriteType.withResponse)
+    peripheral?.writeValue(outgoingData as Data, for: BlePeripheral.goalTintChar!, type: CBCharacteristicWriteType.withResponse)
   }
 }
 

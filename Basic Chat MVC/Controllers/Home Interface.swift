@@ -42,7 +42,9 @@ class Home_Interface: UIViewController {
         tintProgress.progress = 0
         tintProgress.isHidden = true
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.showReceivedValue(notification:)), name: NSNotification.Name(rawValue: "Notify"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseSOTPerc(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseDrvSt(notification:)), name: NSNotification.Name(rawValue: "NotifyDrvSt"), object: nil)
         
     }
     
@@ -53,8 +55,8 @@ class Home_Interface: UIViewController {
         let data = Data(bytes: &value, count: 1)
         //change the "data" to valueString
         if let blePeripheral = BlePeripheral.connectedPeripheral {
-            if let txCharacteristic = BlePeripheral.connectedTXChar {
-                blePeripheral.writeValue(data, for: txCharacteristic, type: CBCharacteristicWriteType.withResponse)
+            if let goalTintChar = BlePeripheral.goalTintChar {
+                blePeripheral.writeValue(data, for: goalTintChar, type: CBCharacteristicWriteType.withResponse)
             }
         }
     }
@@ -109,7 +111,7 @@ class Home_Interface: UIViewController {
 //    }
     
     
-    @objc func showReceivedValue(notification: Notification) -> Void{
+    @objc func parseSOTPerc(notification: Notification) -> Void{
         
         var text = String(describing: notification.object)
         text = text.replacingOccurrences(of: "Optional(<", with: "")
@@ -126,6 +128,12 @@ class Home_Interface: UIViewController {
         
 //        testingMethod()
         
+    }
+    
+    @objc func parseDrvSt(notification: Notification) -> Void {
+        
+        var text = String(describing: notification.object)
+        print(text)
     }
     
         @IBAction func valueOut(_ sender: Any) {

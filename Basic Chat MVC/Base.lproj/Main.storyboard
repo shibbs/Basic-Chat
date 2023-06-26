@@ -150,17 +150,17 @@
                         <outlet property="peripheralFoundLabel" destination="Yva-ye-IbR" id="tgW-If-vma"/>
                         <outlet property="scanningButton" destination="mWF-kO-Gxc" id="W2D-RX-Wsj"/>
                         <outlet property="tableView" destination="5Ud-Yr-D9H" id="MQg-TN-ifU"/>
-                        <segue destination="R5k-cl-Bq2" kind="presentation" identifier="pairingToHome" modalPresentationStyle="fullScreen" id="GfX-O5-p5v"/>
+                        <segue destination="R5k-cl-Bq2" kind="presentation" identifier="pairingToHome" modalPresentationStyle="fullScreen" modalTransitionStyle="coverVertical" id="GfX-O5-p5v"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1121.3740458015266" y="74.647887323943664"/>
         </scene>
-        <!--Sensor Data Interface-->
+        <!--Console Interface-->
         <scene sceneID="Ifo-QW-Rye">
             <objects>
-                <viewController storyboardIdentifier="ConsoleViewController" title="Sensor Data Interface" useStoryboardIdentifierAsRestorationIdentifier="YES" id="qte-y8-9X3" customClass="ConsoleViewController" customModule="Tynt_Demo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ConsoleViewController" title="Console Interface" useStoryboardIdentifierAsRestorationIdentifier="YES" id="qte-y8-9X3" customClass="ConsoleViewController" customModule="Tynt_Demo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="oWq-aa-fbS">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -281,7 +281,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lY2-3d-2HZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="Txb-Xy-uKH" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="306" y="75"/>
+            <point key="canvasLocation" x="-546" y="804"/>
         </scene>
         <!--Home-->
         <scene sceneID="bJj-3d-dGo">
@@ -399,13 +399,53 @@
                         <outlet property="tintProgress" destination="AVo-dG-JOd" id="g8u-Bo-2Nb"/>
                         <outlet property="tintValue" destination="StL-oh-fab" id="hfw-J1-WyI"/>
                         <segue destination="glH-oV-h6e" kind="unwind" identifier="unwindToPairing" unwindAction="unwindToPairingWithSegue:" id="20g-xR-P0l"/>
-                        <segue destination="qte-y8-9X3" kind="presentation" identifier="homeToData" modalPresentationStyle="fullScreen" id="nz8-zv-Kbu"/>
+                        <segue destination="rRF-wk-or9" kind="presentation" identifier="homeToData" modalPresentationStyle="fullScreen" modalTransitionStyle="coverVertical" id="vCt-sb-uFR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dQO-RL-iNp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="glH-oV-h6e" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-405.34351145038164" y="74.647887323943664"/>
+        </scene>
+        <!--Sensor Data Interface-->
+        <scene sceneID="fqq-bY-SWG">
+            <objects>
+                <viewController storyboardIdentifier="Data_Interface" title="Sensor Data Interface" id="rRF-wk-or9" customClass="Data_Interface" customModule="Tynt_Demo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="aAW-E7-Cjm">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vGa-Hu-c8Q">
+                                <rect key="frame" x="16" y="59" width="40" height="43"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="43" id="B61-AI-QJx"/>
+                                    <constraint firstAttribute="width" constant="40" id="fXb-TD-GW5"/>
+                                </constraints>
+                                <color key="tintColor" name="Color"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="house.fill" catalog="system"/>
+                                <connections>
+                                    <action selector="backToHome:" destination="rRF-wk-or9" eventType="touchUpInside" id="nss-Xl-flD"/>
+                                    <action selector="backToHome:" destination="qte-y8-9X3" eventType="touchUpInside" id="oKa-ib-Gwf"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="id7-aW-RR4"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="vGa-Hu-c8Q" firstAttribute="leading" secondItem="id7-aW-RR4" secondAttribute="leading" constant="16" id="2OO-IJ-WBP"/>
+                            <constraint firstItem="vGa-Hu-c8Q" firstAttribute="top" secondItem="id7-aW-RR4" secondAttribute="top" id="VKQ-CB-Kbh"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="homeButton" destination="vGa-Hu-c8Q" id="HPL-Ba-Wn1"/>
+                        <segue destination="IxB-wI-gsW" kind="unwind" identifier="unwindToHome" unwindAction="returnToHomeWithSegue:" id="xy5-bx-dF3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ntw-EZ-dWa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="IxB-wI-gsW" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="314" y="75"/>
         </scene>
     </scenes>
     <resources>

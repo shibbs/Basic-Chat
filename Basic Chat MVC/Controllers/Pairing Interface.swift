@@ -9,8 +9,9 @@ class ViewController: UIViewController {
     // Data
     private var centralManager: CBCentralManager!
     private var bluefruitPeripheral: CBPeripheral!
-    private var txCharacteristic: CBCharacteristic!
-    private var rxCharacteristic: CBCharacteristic!
+    private var goalTintChar: CBCharacteristic!
+    private var SOTChar: CBCharacteristic!
+    private var DrvStChar: CBCharacteristic!
     private var peripheralArray: [CBPeripheral] = []
     private var rssiArray = [NSNumber]()
     private var timer = Timer()
@@ -38,7 +39,7 @@ class ViewController: UIViewController {
       // Manager
       centralManager = CBCentralManager(delegate: self, queue: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.showReceivedValue(notification:)), name: NSNotification.Name(rawValue: "Notify"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseSOTPerc(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -187,7 +188,7 @@ extension ViewController: CBCentralManagerDelegate {
     // MARK: - Connect
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         stopScanning()
-        bluefruitPeripheral.discoverServices([CBUUIDs.BLEService_UUID])
+        bluefruitPeripheral.discoverServices([CBUUIDs.cService_UUID, CBUUIDs.sService_UUID])
     }
 }
 
@@ -214,22 +215,22 @@ extension ViewController: CBPeripheralDelegate {
 
     for characteristic in characteristics {
 
-      if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Goal_Perc)  {
+      if characteristic.uuid.isEqual(CBUUIDs.cService_Characteristic_uuid_StateOfTint)  {
 
-        rxCharacteristic = characteristic
+        SOTChar = characteristic
 
-        BlePeripheral.connectedRXChar = rxCharacteristic
+        BlePeripheral.SOTChar = SOTChar
 
-        peripheral.setNotifyValue(true, for: rxCharacteristic!)
+        peripheral.setNotifyValue(true, for: SOTChar!)
         peripheral.readValue(for: characteristic)
 
-        print("RX Characteristic: \(rxCharacteristic.uuid)")
+        print("RX Characteristic: \(SOTChar.uuid)")
       }
 
-      if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_SOT_Perc){
-        txCharacteristic = characteristic
-        BlePeripheral.connectedTXChar = txCharacteristic
-        print("TX Characteristic: \(txCharacteristic.uuid)")
+      if characteristic.uuid.isEqual(CBUUIDs.cService_Characteristic_uuid_GoalTint){
+        goalTintChar = characteristic
+        BlePeripheral.goalTintChar = goalTintChar
+        print("TX Characteristic: \(goalTintChar.uuid)")
       }
         
         
@@ -239,21 +240,31 @@ extension ViewController: CBPeripheralDelegate {
 
 
 
-  func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+  func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor char: CBCharacteristic, error: Error?) {
 
-    var characteristicASCIIValue = NSString()
+      var characteristicASCIIValue = NSString()
 
-    guard characteristic == rxCharacteristic,
+            guard char == SOTChar,
 
-          let characteristicValue = characteristic.value,
-          let ASCIIstring = NSString(data: characteristicValue, encoding: String.Encoding.utf8.rawValue) else { return }
+                  let characteristicValue = char.value,
+                  let ASCIIstring = NSString(data: characteristicValue, encoding: String.Encoding.utf8.rawValue) else { return }
 
-      characteristicASCIIValue = ASCIIstring
+              characteristicASCIIValue = ASCIIstring
 
-      print("Value Recieved: ");
-      print(characteristicValue);
+              print("Value Recieved: ");
+              print(characteristicValue);
 
-    NotificationCenter.default.post(name:NSNotification.Name(rawValue: "Notify"), object: characteristicValue as Data)
+            NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifySOTP"), object: characteristicValue as Data)
+      
+//      if char == SOTChar {
+//
+//          NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifySOTP"), object: char.value! as Data)
+//      }
+//      else if char == DrvStChar {
+//
+//          NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyDrvSt"), object: char.value! as Data)
+//      }
+
   }
 
   func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
@@ -344,22 +355,19 @@ extension ViewController: UITableViewDelegate {
         }
     }
     
-    @objc func showReceivedValue(notification: Notification) -> Void{
-        
+    @objc func parseSOTPerc(notification: Notification) -> Void{
+
         var text = String(describing: notification.object)
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
-        
+
         print(text)
-        
+
         let cur = Int(text, radix: 16)!
         currentTintLevel = cur
-        
+
         print(String(currentTintLevel) + " :currentTintLevel from sRV in PairingInterface")
-        
-        
-//        testingMethod()
-        
+
     }
     
 }
