@@ -102,8 +102,8 @@ class ConsoleViewController: UIViewController {
       let data = Data(bytes: &value, count: 1)
       //change the "data" to valueString
     if let blePeripheral = BlePeripheral.connectedPeripheral {
-          if let goalTintCharic = BlePeripheral.goalTintChar {
-              blePeripheral.writeValue(data, for: goalTintCharic, type: CBCharacteristicWriteType.withResponse)
+          if let goalTintChar = BlePeripheral.goalTintChar {
+              blePeripheral.writeValue(data, for: goalTintChar, type: CBCharacteristicWriteType.withResponse)
           }
       }
   }
