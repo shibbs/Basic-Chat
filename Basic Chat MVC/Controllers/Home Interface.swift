@@ -68,7 +68,7 @@ class Home_Interface: UIViewController {
         if goalTintLevel == nil {
             
             statusText.text = "Idle"
-            slider.isEnabled = true
+//            slider.isEnabled = true
             slider.value = Float(currTintLevel)
             tintValue.text = String(Int(round(slider.value))) + "% Tint"
             
@@ -144,7 +144,7 @@ class Home_Interface: UIViewController {
         
         if slider.value != Float(currTintLevel) {
             
-            slider.isEnabled = false
+//            slider.isEnabled = false
             tintProgress.progress = 0
             tintProgress.isHidden = false
             goalTintLevel = val
@@ -167,7 +167,7 @@ class Home_Interface: UIViewController {
                 statusText.text = "Idle"
                 tintProgress.progress = 0
                 tintProgress.isHidden = true
-                slider.isEnabled = true
+//                slider.isEnabled = true
             }
         }
     }
