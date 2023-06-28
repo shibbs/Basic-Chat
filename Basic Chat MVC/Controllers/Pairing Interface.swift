@@ -16,6 +16,7 @@ class ViewController: UIViewController {
     private var rssiArray = [NSNumber]()
     private var timer = Timer()
     var currentTintLevel: Int!
+    let defaults = UserDefaults.standard
 
     // UI
     @IBOutlet weak var tableView: UITableView!
@@ -54,6 +55,10 @@ class ViewController: UIViewController {
     
     func connectToDevice() -> Void {
       centralManager?.connect(bluefruitPeripheral!, options: nil)
+        let string = String(describing: bluefruitPeripheral.identifier)
+        print("string: " + string)
+        defaults.setValue(String(describing: bluefruitPeripheral.identifier), forKey: "LastConnectedUUID")
+        print(bluefruitPeripheral.identifier)
   }
 
     func disconnectFromDevice() -> Void {
@@ -77,6 +82,20 @@ class ViewController: UIViewController {
         centralManager?.scanForPeripherals(withServices: []) //CBUUIDs.BLEService_UUID])
         scanningButton.setTitle("Scanning...", for: .normal)
         scanningButton.isEnabled = false
+        
+        if let lastUUID = defaults.value(forKey: "LastConnectedUUID") {
+            for periph in peripheralArray {
+                if String(describing: lastUUID) == String(describing: periph.identifier) {
+
+                    BlePeripheral.connectedPeripheral = periph
+
+                    connectToDevice()
+
+                    self.performSegue(withIdentifier: "pairingToHome", sender: nil)
+                }
+            }
+        }
+        
         Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
             self.stopScanning()
         }
