@@ -24,6 +24,7 @@ class Home_Interface: UIViewController {
     private var goalTintLevel: Int!
     private var tintProgressLength: Int!
     var currTintLevel = 0
+    var driveState: String! = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,23 +77,25 @@ class Home_Interface: UIViewController {
         else {
             
             tintProgress.progress = ( 1 - ((Float(abs(goalTintLevel - currTintLevel)) / Float(tintProgressLength!))))
-            
-            if(currTintLevel > goalTintLevel) {
+
+            if(driveState == "02") {
                 statusText.text = "Bleaching: " + String(currTintLevel) + "% Tint"
+                tintProgress.isHidden = false
             }
-            else if(currTintLevel < goalTintLevel) {
+            else if(driveState == "01") {
                 statusText.text = "Tinting: " + String(currTintLevel) + "% Tint"
+                tintProgress.isHidden = false
+            }
+            else if(driveState == "00") {
+                statusText.text = "Idle"
+                slider.value = Float(currTintLevel)
+                tintValue.text = String(currTintLevel) + "% Tint"
+                tintProgress.progress = 0
+                tintProgress.isHidden = true
             }
         }
         
-        endProcess()
     }
-    
-    func testingMethod() {
-        print(currTintLevel)
-        print(" testingMethodOutput")
-    }
-    
     
     @IBAction func writeValueToInterface(_ sender: UISlider) {
         tintValue.text = String(Int(round(slider.value))) + "% Tint"
@@ -122,18 +125,18 @@ class Home_Interface: UIViewController {
         let cur = Int(text, radix: 16)!
         currTintLevel = cur
         
-        print(String(currTintLevel) + " :currTintLevel from sRV")
-        
         writeStatus()
-        
-//        testingMethod()
         
     }
     
     @objc func parseDrvSt(notification: Notification) -> Void {
         
         var text = String(describing: notification.object)
-        print(text)
+        text = text.replacingOccurrences(of: "Optional(<", with: "")
+        text = text.replacingOccurrences(of: ">)", with: "")
+        driveState = text
+        
+        writeStatus()
     }
     
         @IBAction func valueOut(_ sender: Any) {
@@ -144,7 +147,6 @@ class Home_Interface: UIViewController {
         
         if slider.value != Float(currTintLevel) {
             
-//            slider.isEnabled = false
             tintProgress.progress = 0
             tintProgress.isHidden = false
             goalTintLevel = val
@@ -155,21 +157,6 @@ class Home_Interface: UIViewController {
             writeOutgoingValue(value: &val)
         }
         
-    }
-    
-
-    
-    func endProcess() {
-
-        if(goalTintLevel != nil) {
-            if(abs(goalTintLevel - currTintLevel) <= 1) {
-                currTintLevel = goalTintLevel
-                statusText.text = "Idle"
-                tintProgress.progress = 0
-                tintProgress.isHidden = true
-//                slider.isEnabled = true
-            }
-        }
     }
     
     

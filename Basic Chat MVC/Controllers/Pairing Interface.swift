@@ -245,6 +245,17 @@ extension ViewController: CBPeripheralDelegate {
 
         print("RX Characteristic: \(SOTChar.uuid)")
       }
+        else if characteristic.uuid.isEqual(CBUUIDs.cService_Characteristic_uuid_DriveState) {
+            
+            DrvStChar = characteristic
+
+            BlePeripheral.DrvStChar = DrvStChar
+
+            peripheral.setNotifyValue(true, for: DrvStChar!)
+            peripheral.readValue(for: characteristic)
+
+            print("DrvStCharacteristic: \(DrvStChar.uuid)")
+        }
 
       if characteristic.uuid.isEqual(CBUUIDs.cService_Characteristic_uuid_GoalTint){
         goalTintChar = characteristic
@@ -260,29 +271,15 @@ extension ViewController: CBPeripheralDelegate {
 
 
   func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor char: CBCharacteristic, error: Error?) {
-
-      var characteristicASCIIValue = NSString()
-
-            guard char == SOTChar,
-
-                  let characteristicValue = char.value,
-                  let ASCIIstring = NSString(data: characteristicValue, encoding: String.Encoding.utf8.rawValue) else { return }
-
-              characteristicASCIIValue = ASCIIstring
-
-              print("Value Recieved: ");
-              print(characteristicValue);
-
-            NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifySOTP"), object: characteristicValue as Data)
       
-//      if char == SOTChar {
-//
-//          NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifySOTP"), object: char.value! as Data)
-//      }
-//      else if char == DrvStChar {
-//
-//          NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyDrvSt"), object: char.value! as Data)
-//      }
+      if char == SOTChar {
+
+          NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifySOTP"), object: char.value! as Data)
+      }
+      else if char == DrvStChar {
+
+          NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyDrvSt"), object: char.value! as Data)
+      }
 
   }
 
@@ -384,8 +381,6 @@ extension ViewController: UITableViewDelegate {
 
         let cur = Int(text, radix: 16)!
         currentTintLevel = cur
-
-        print(String(currentTintLevel) + " :currentTintLevel from sRV in PairingInterface")
 
     }
     
