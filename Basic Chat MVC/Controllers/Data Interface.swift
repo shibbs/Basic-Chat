@@ -9,8 +9,16 @@ import UIKit
 
 class Data_Interface: UIViewController {
     
-    // MARK: - Variables
+    // MARK: - Outlets/Variables
+    @IBOutlet weak var tempLabel: UILabel!
+    @IBOutlet weak var humidityLabel: UILabel!
+    @IBOutlet weak var intLightLabel: UILabel!
+    @IBOutlet weak var extLightLabel: UILabel!
     @IBOutlet weak var homeButton: UIButton!
+    @IBOutlet weak var opticTransLabel: UILabel!
+    @IBOutlet weak var alertslabel: UILabel!
+    @IBOutlet weak var coulombCountLabel: UILabel!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,7 +26,11 @@ class Data_Interface: UIViewController {
         homeButton.setTitle("", for: .normal)
     }
     
-
+    // MARK: - IB Action Funcs
+    
+    @IBAction func autoTintStatus(_ sender: Any) {
+    }
+    
     
     // MARK: - Navigation
 
