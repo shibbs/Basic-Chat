@@ -35,11 +35,11 @@ class ConsoleViewController: UIViewController {
     txLabel.text = "TX:\(String(BlePeripheral.goalTintChar!.uuid.uuidString))"
     rxLabel.text = "RX:\(String(BlePeripheral.SOTChar!.uuid.uuidString))"
 
-    if let service = BlePeripheral.connectedService {
-      serviceLabel.text = "Number of Services: \(String((BlePeripheral.connectedPeripheral?.services!.count)!))"
-    } else{
-      print("Service was not found")
-    }
+//    if let service = BlePeripheral.connectedService {
+//      serviceLabel.text = "Number of Services: \(String((BlePeripheral.connectedPeripheral?.services!.count)!))"
+//    } else{
+//      print("Service was not found")
+//    }
   }
 
     @IBAction func backToHome(_ sender: Any) {

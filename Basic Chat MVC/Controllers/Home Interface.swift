@@ -24,8 +24,13 @@ class Home_Interface: UIViewController {
     private var goalTintLevel: Int!
     private var tintProgressLength: Int!
     var currTintLevel = 0
+    
     var driveState: String! = ""
     var autoTintChar: String! = ""
+    var tempChar: String! = ""
+    var humidityChar: String! = ""
+    var ambLightChar: String! = ""
+    var accelChar: String! = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +54,14 @@ class Home_Interface: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.parseDrvSt(notification:)), name: NSNotification.Name(rawValue: "NotifyDrvSt"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.parseATSChar(notification:)), name: NSNotification.Name(rawValue: "NotifyATS"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseTempChar(notification:)), name: NSNotification.Name(rawValue: "NotifyTemp"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseHumidityChar(notification:)), name: NSNotification.Name(rawValue: "NotifyHumidity"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseAmbLightChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAL"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseAccelChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAccel"), object: nil)
         
     }
     
@@ -148,6 +161,42 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: ">)", with: "")
         
         autoTintChar = text
+    }
+    
+    @objc func parseTempChar(notification: Notification) -> Void {
+        var text = String(describing: notification.object)
+        text = text.replacingOccurrences(of: "Optional(<", with: "")
+        text = text.replacingOccurrences(of: ">)", with: "")
+        
+        print(text + ": temp from parse method")
+        tempChar = text
+    }
+    
+    @objc func parseHumidityChar(notification: Notification) -> Void {
+        var text = String(describing: notification.object)
+        text = text.replacingOccurrences(of: "Optional(<", with: "")
+        text = text.replacingOccurrences(of: ">)", with: "")
+        
+        print(text + ": humidity from parse method")
+        humidityChar = text
+    }
+    
+    @objc func parseAmbLightChar(notification: Notification) -> Void {
+        var text = String(describing: notification.object)
+        text = text.replacingOccurrences(of: "Optional(<", with: "")
+        text = text.replacingOccurrences(of: ">)", with: "")
+        
+        print(text + ": amblight from parse method")
+        ambLightChar = text
+    }
+    
+    @objc func parseAccelChar(notification: Notification) -> Void {
+        var text = String(describing: notification.object)
+        text = text.replacingOccurrences(of: "Optional(<", with: "")
+        text = text.replacingOccurrences(of: ">)", with: "")
+        
+        print(text + ": accel from parse method")
+        accelChar = text
     }
     
         @IBAction func valueOut(_ sender: Any) {

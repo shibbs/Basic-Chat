@@ -13,6 +13,10 @@ class ViewController: UIViewController {
     private var SOTChar: CBCharacteristic!
     private var DrvStChar: CBCharacteristic!
     private var autoTintChar: CBCharacteristic!
+    private var tempChar: CBCharacteristic!
+    private var humidityChar: CBCharacteristic!
+    private var ambLightChar: CBCharacteristic!
+    private var accelChar: CBCharacteristic!
     private var peripheralArray: [CBPeripheral] = []
     private var rssiArray = [NSNumber]()
     private var timer = Timer()
@@ -134,7 +138,7 @@ class ViewController: UIViewController {
 
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
       //Once connected, move to new view controller to manager incoming and outgoing data
-      let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//      let storyboard = UIStoryboard(name: "Main", bundle: nil)
 
 //        let detailViewController = storyboard.instantiateViewController(withIdentifier: "ConsoleViewController") as! ConsoleViewController
         
@@ -222,7 +226,9 @@ extension ViewController: CBPeripheralDelegate {
       for service in services {
         peripheral.discoverCharacteristics(nil, for: service)
       }
-      BlePeripheral.connectedService = services[0]
+        print(services)
+      BlePeripheral.connectedControlService = services[0]
+      BlePeripheral.connectedSensorService = services[1]
     }
 
   func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
@@ -257,21 +263,52 @@ extension ViewController: CBPeripheralDelegate {
 
             print("DrvStCharacteristic: \(DrvStChar.uuid)")
         }
+        
+        else if characteristic.uuid.isEqual(CBUUIDs.cService_Characteristic_uuid_AutoMode){
+            autoTintChar = characteristic
+            BlePeripheral.autoTintChar = autoTintChar
+            peripheral.setNotifyValue(true, for: autoTintChar!)
+            peripheral.readValue(for: characteristic)
+            print("Auto Tint Characteristic: \(autoTintChar.uuid)")
+        }
+        
+        else if characteristic.uuid.isEqual(CBUUIDs.sService_Characteristic_uuid_Temp){
+            tempChar = characteristic
+            BlePeripheral.tempChar = tempChar
+            peripheral.setNotifyValue(true, for: tempChar!)
+            peripheral.readValue(for: characteristic)
+            print("Temperature Characteristic: \(tempChar.uuid)")
+          }
+        
+        else if characteristic.uuid.isEqual(CBUUIDs.sService_Characteristic_uuid_Humid){
+            humidityChar = characteristic
+            BlePeripheral.humidityChar = humidityChar
+            peripheral.setNotifyValue(true, for: humidityChar!)
+            peripheral.readValue(for: characteristic)
+            print("Humidity Characteristic: \(humidityChar.uuid)")
+          }
+        
+        else if characteristic.uuid.isEqual(CBUUIDs.sService_Characteristic_uuid_AmbLight){
+            ambLightChar = characteristic
+            BlePeripheral.ambLightChar = ambLightChar
+            peripheral.setNotifyValue(true, for: ambLightChar!)
+            peripheral.readValue(for: characteristic)
+            print("Ambient Light Characteristic: \(ambLightChar.uuid)")
+          }
+        
+        else if characteristic.uuid.isEqual(CBUUIDs.sService_Characteristic_uuid_Accel){
+            accelChar = characteristic
+            BlePeripheral.accelChar = accelChar
+            peripheral.setNotifyValue(true, for: accelChar!)
+            peripheral.readValue(for: characteristic)
+            print("Accelerometer Characteristic: \(accelChar.uuid)")
+          }
 
-      else if characteristic.uuid.isEqual(CBUUIDs.cService_Characteristic_uuid_GoalTint){
-        goalTintChar = characteristic
-        BlePeripheral.goalTintChar = goalTintChar
-        print("Goal Tint Characteristic: \(goalTintChar.uuid)")
-      }
-        
-    else if characteristic.uuid.isEqual(CBUUIDs.cService_Characteristic_uuid_AutoMode){
-        autoTintChar = characteristic
-        BlePeripheral.autoTintChar = autoTintChar
-        peripheral.setNotifyValue(true, for: autoTintChar!)
-        peripheral.readValue(for: characteristic)
-        print("Auto Tint Characteristic: \(autoTintChar.uuid)")
-      }
-        
+        else if characteristic.uuid.isEqual(CBUUIDs.cService_Characteristic_uuid_GoalTint){
+            goalTintChar = characteristic
+            BlePeripheral.goalTintChar = goalTintChar
+            print("Goal Tint Characteristic: \(goalTintChar.uuid)")
+        }
         
     }
     delayedConnection()
@@ -292,6 +329,22 @@ extension ViewController: CBPeripheralDelegate {
       else if char == autoTintChar {
           
           NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyATS"), object: char.value! as Data)
+      }
+      else if char == tempChar {
+          
+          NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyTemp"), object: char.value! as Data)
+      }
+      else if char == humidityChar {
+          
+          NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyHumidity"), object: char.value! as Data)
+      }
+      else if char == ambLightChar {
+          
+          NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyAL"), object: char.value! as Data)
+      }
+      else if char == accelChar {
+          
+          NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyAccel"), object: char.value! as Data)
       }
 
   }
