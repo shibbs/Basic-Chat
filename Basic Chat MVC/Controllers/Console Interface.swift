@@ -9,7 +9,7 @@ class ConsoleViewController: UIViewController {
   //Data
   var peripheralManager: CBPeripheralManager?
   var peripheral: CBPeripheral?
-  var periperalgoalTintCharic: CBCharacteristic?
+  var periperalgoalTintChar: CBCharacteristic?
 
   @IBOutlet weak var peripheralLabel: UILabel!
   @IBOutlet weak var serviceLabel: UILabel!

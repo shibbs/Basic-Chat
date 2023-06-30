@@ -25,6 +25,7 @@ class Home_Interface: UIViewController {
     private var tintProgressLength: Int!
     var currTintLevel = 0
     var driveState: String! = ""
+    var autoTintChar: String! = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +47,8 @@ class Home_Interface: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.parseSOTPerc(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.parseDrvSt(notification:)), name: NSNotification.Name(rawValue: "NotifyDrvSt"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseATSChar(notification:)), name: NSNotification.Name(rawValue: "NotifyATS"), object: nil)
         
     }
     
@@ -139,8 +142,15 @@ class Home_Interface: UIViewController {
         writeStatus()
     }
     
+    @objc func parseATSChar(notification: Notification) -> Void {
+        var text = String(describing: notification.object)
+        text = text.replacingOccurrences(of: "Optional(<", with: "")
+        text = text.replacingOccurrences(of: ">)", with: "")
+        
+        autoTintChar = text
+    }
+    
         @IBAction func valueOut(_ sender: Any) {
-//        testingMethod()
         
         var val = Int(round(slider.value))
         let cur = Int(currTintLevel)
@@ -185,6 +195,10 @@ class Home_Interface: UIViewController {
         if segue.identifier == "unwindToPairing" {
             let destVC = segue.destination as? ViewController
             destVC?.homeButton.isHidden = false
+        }
+        else if segue.identifier == "homeToData" {
+            let destVC = segue.destination as? Data_Interface
+            destVC?.autoTintChar = autoTintChar
         }
     }
 }

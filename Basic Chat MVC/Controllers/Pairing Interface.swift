@@ -12,6 +12,7 @@ class ViewController: UIViewController {
     private var goalTintChar: CBCharacteristic!
     private var SOTChar: CBCharacteristic!
     private var DrvStChar: CBCharacteristic!
+    private var autoTintChar: CBCharacteristic!
     private var peripheralArray: [CBPeripheral] = []
     private var rssiArray = [NSNumber]()
     private var timer = Timer()
@@ -243,7 +244,7 @@ extension ViewController: CBPeripheralDelegate {
         peripheral.setNotifyValue(true, for: SOTChar!)
         peripheral.readValue(for: characteristic)
 
-        print("RX Characteristic: \(SOTChar.uuid)")
+        print("State of Tint Characteristic: \(SOTChar.uuid)")
       }
         else if characteristic.uuid.isEqual(CBUUIDs.cService_Characteristic_uuid_DriveState) {
             
@@ -257,10 +258,18 @@ extension ViewController: CBPeripheralDelegate {
             print("DrvStCharacteristic: \(DrvStChar.uuid)")
         }
 
-      if characteristic.uuid.isEqual(CBUUIDs.cService_Characteristic_uuid_GoalTint){
+      else if characteristic.uuid.isEqual(CBUUIDs.cService_Characteristic_uuid_GoalTint){
         goalTintChar = characteristic
         BlePeripheral.goalTintChar = goalTintChar
-        print("TX Characteristic: \(goalTintChar.uuid)")
+        print("Goal Tint Characteristic: \(goalTintChar.uuid)")
+      }
+        
+    else if characteristic.uuid.isEqual(CBUUIDs.cService_Characteristic_uuid_AutoMode){
+        autoTintChar = characteristic
+        BlePeripheral.autoTintChar = autoTintChar
+        peripheral.setNotifyValue(true, for: autoTintChar!)
+        peripheral.readValue(for: characteristic)
+        print("Auto Tint Characteristic: \(autoTintChar.uuid)")
       }
         
         
@@ -279,6 +288,10 @@ extension ViewController: CBPeripheralDelegate {
       else if char == DrvStChar {
 
           NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyDrvSt"), object: char.value! as Data)
+      }
+      else if char == autoTintChar {
+          
+          NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyATS"), object: char.value! as Data)
       }
 
   }

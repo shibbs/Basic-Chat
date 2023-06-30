@@ -12,5 +12,6 @@ class BlePeripheral {
  static var connectedService: CBService?
  static var goalTintChar: CBCharacteristic?
  static var SOTChar: CBCharacteristic?
-    static var DrvStChar: CBCharacteristic?
+ static var DrvStChar: CBCharacteristic?
+ static var autoTintChar: CBCharacteristic? 
 }

@@ -560,8 +560,9 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eIN-CQ-pR5">
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="eIN-CQ-pR5">
                                 <rect key="frame" x="172" y="734" width="51" height="31"/>
+                                <color key="onTintColor" name="Color"/>
                                 <connections>
                                     <action selector="autoTintStatus:" destination="rRF-wk-or9" eventType="valueChanged" id="mGp-u4-jil"/>
                                 </connections>
@@ -594,6 +595,7 @@
                     </view>
                     <connections>
                         <outlet property="alertslabel" destination="zep-Va-kAN" id="ljI-wR-BfY"/>
+                        <outlet property="autoTintSwitch" destination="eIN-CQ-pR5" id="yqU-TH-DP4"/>
                         <outlet property="coulombCountLabel" destination="BQX-4t-MQt" id="X3h-fI-AYQ"/>
                         <outlet property="extLightLabel" destination="ZST-Qh-OHX" id="xXi-aZ-CuV"/>
                         <outlet property="homeButton" destination="vGa-Hu-c8Q" id="HPL-Ba-Wn1"/>
