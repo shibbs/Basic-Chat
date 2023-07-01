@@ -594,12 +594,12 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="alertslabel" destination="zep-Va-kAN" id="ljI-wR-BfY"/>
+                        <outlet property="alertsLabel" destination="zep-Va-kAN" id="0OE-ta-nkh"/>
                         <outlet property="autoTintSwitch" destination="eIN-CQ-pR5" id="yqU-TH-DP4"/>
                         <outlet property="coulombCountLabel" destination="BQX-4t-MQt" id="X3h-fI-AYQ"/>
                         <outlet property="extLightLabel" destination="ZST-Qh-OHX" id="xXi-aZ-CuV"/>
                         <outlet property="homeButton" destination="vGa-Hu-c8Q" id="HPL-Ba-Wn1"/>
-                        <outlet property="humidityLabel" destination="yAp-X3-Gtu" id="Cvh-Y0-QF7"/>
+                        <outlet property="humidityLabel" destination="JyR-Lj-I5r" id="pXI-ju-lFO"/>
                         <outlet property="intLightLabel" destination="yAp-X3-Gtu" id="TX9-cE-3Lj"/>
                         <outlet property="opticTransLabel" destination="G0J-fP-eMX" id="PZE-8J-TEV"/>
                         <outlet property="tempLabel" destination="eUb-IK-vOZ" id="4al-Hh-bAZ"/>

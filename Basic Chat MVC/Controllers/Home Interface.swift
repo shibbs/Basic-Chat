@@ -23,14 +23,19 @@ class Home_Interface: UIViewController {
     
     private var goalTintLevel: Int!
     private var tintProgressLength: Int!
-    var currTintLevel = 0
+    var currentTintLevel = 0
     
     var driveState: String! = ""
     var autoTintChar: String! = ""
-    var tempChar: String! = ""
-    var humidityChar: String! = ""
-    var ambLightChar: String! = ""
+    var temp: Float!
+    var humidity: Float!
+    var intLight: Float!
+    var extLight: Float!
+    var opticTrans: Float!
     var accelChar: String! = ""
+    
+    
+    //MARK: - ViewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +46,7 @@ class Home_Interface: UIViewController {
         
         slider.isEnabled = true
         
-        writeStatus()
+        update()
         
         sensorData.setTitle("", for: .normal)
         pairing.setTitle("", for: .normal)
@@ -78,34 +83,34 @@ class Home_Interface: UIViewController {
         }
     }
     
-    func writeStatus() {
+    func update() {
         
-        print(String(currTintLevel) + " from writeStatus")
+        print(String(currentTintLevel) + " from update")
         
         if goalTintLevel == nil {
             
             statusText.text = "Idle"
 //            slider.isEnabled = true
-            slider.value = Float(currTintLevel)
+            slider.value = Float(currentTintLevel)
             tintValue.text = String(Int(round(slider.value))) + "% Tint"
             
         }
         else {
             
-            tintProgress.progress = ( 1 - ((Float(abs(goalTintLevel - currTintLevel)) / Float(tintProgressLength!))))
+            tintProgress.progress = ( 1 - ((Float(abs(goalTintLevel - currentTintLevel)) / Float(tintProgressLength!))))
 
             if(driveState == "02") {
-                statusText.text = "Bleaching: " + String(currTintLevel) + "% Tint"
+                statusText.text = "Bleaching: " + String(currentTintLevel) + "% Tint"
                 tintProgress.isHidden = false
             }
             else if(driveState == "01") {
-                statusText.text = "Tinting: " + String(currTintLevel) + "% Tint"
+                statusText.text = "Tinting: " + String(currentTintLevel) + "% Tint"
                 tintProgress.isHidden = false
             }
             else if(driveState == "00") {
                 statusText.text = "Idle"
-                slider.value = Float(currTintLevel)
-                tintValue.text = String(currTintLevel) + "% Tint"
+                slider.value = Float(currentTintLevel)
+                tintValue.text = String(currentTintLevel) + "% Tint"
                 tintProgress.progress = 0
                 tintProgress.isHidden = true
             }
@@ -117,18 +122,28 @@ class Home_Interface: UIViewController {
         tintValue.text = String(Int(round(slider.value))) + "% Tint"
     }
     
-//    @IBAction func writeOutValue(_ sender: UISlider) {
-//
-//        var val = Int(round(slider.value))
-//        writeOutgoingValue(value: &val)
-//        goalTintLevel = val
-//        slider.isEnabled = false
-//
-//        tintProgress.isHidden = false
-//        tintProgress.progress = 0
-//        tintProgressLength = abs(goalTintLevel - currentTintLevel)
-//    }
+    func separateAmbLightChar(rawChar: String) {
+        
+        let bytes = rawChar.components(separatedBy: " ")
+        
+        let intLightBytes = bytes[0]
+        let extLightBytes = bytes[1]
+        let extTintBytes = bytes[2]
+        
+        let i = Float(Int(intLightBytes, radix: 16)!)
+        intLight = i / 10
+        
+        let e = Float(Int(extLightBytes, radix: 16)!)
+        extLight = e / 10
+        
+        let et = Float(Int(extTintBytes, radix: 16)!)
+        
+        let x = (et / e) * 1000
+        opticTrans = (roundf(x) / 10.0)
+        
+    }
     
+    //MARK: - Parse Functions
     
     @objc func parseSOTPerc(notification: Notification) -> Void{
         
@@ -139,9 +154,9 @@ class Home_Interface: UIViewController {
         print(text)
         
         let cur = Int(text, radix: 16)!
-        currTintLevel = cur
+        currentTintLevel = cur
         
-        writeStatus()
+        update()
         
     }
     
@@ -152,13 +167,15 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: ">)", with: "")
         driveState = text
         
-        writeStatus()
+        update()
     }
     
     @objc func parseATSChar(notification: Notification) -> Void {
         var text = String(describing: notification.object)
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
+        
+        print(text + ": ATSChar from parse method")
         
         autoTintChar = text
     }
@@ -169,7 +186,10 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: ">)", with: "")
         
         print(text + ": temp from parse method")
-        tempChar = text
+        
+        let t = Int(text, radix: 16)!
+        let value = Float(t)
+        temp = value / 10
     }
     
     @objc func parseHumidityChar(notification: Notification) -> Void {
@@ -178,7 +198,10 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: ">)", with: "")
         
         print(text + ": humidity from parse method")
-        humidityChar = text
+        
+        let t = Int(text, radix: 16)!
+        let value = Float(t)
+        humidity = value
     }
     
     @objc func parseAmbLightChar(notification: Notification) -> Void {
@@ -187,7 +210,8 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: ">)", with: "")
         
         print(text + ": amblight from parse method")
-        ambLightChar = text
+        
+        separateAmbLightChar(rawChar: text)
     }
     
     @objc func parseAccelChar(notification: Notification) -> Void {
@@ -196,15 +220,16 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: ">)", with: "")
         
         print(text + ": accel from parse method")
+        
         accelChar = text
     }
     
         @IBAction func valueOut(_ sender: Any) {
         
         var val = Int(round(slider.value))
-        let cur = Int(currTintLevel)
+        let cur = Int(currentTintLevel)
         
-        if slider.value != Float(currTintLevel) {
+        if slider.value != Float(currentTintLevel) {
             
             tintProgress.progress = 0
             tintProgress.isHidden = false
@@ -218,12 +243,6 @@ class Home_Interface: UIViewController {
         
     }
     
-    
-    
-    
-    
-    
-
     
     // MARK: - Navigation
      
@@ -248,6 +267,13 @@ class Home_Interface: UIViewController {
         else if segue.identifier == "homeToData" {
             let destVC = segue.destination as? Data_Interface
             destVC?.autoTintChar = autoTintChar
+            destVC?.temp = temp
+            destVC?.humidity = humidity
+            destVC?.intLight = intLight
+            destVC?.extLight = extLight
+            destVC?.opticTrans = opticTrans
+            destVC?.coulombCt = Float(currentTintLevel)
+            destVC?.accelChar = accelChar
         }
     }
 }

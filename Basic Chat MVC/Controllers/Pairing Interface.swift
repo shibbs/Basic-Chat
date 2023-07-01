@@ -9,6 +9,12 @@ class ViewController: UIViewController {
     // Data
     private var centralManager: CBCentralManager!
     private var bluefruitPeripheral: CBPeripheral!
+    private var peripheralArray: [CBPeripheral] = []
+    private var rssiArray = [NSNumber]()
+    private var timer = Timer()
+    
+    //MARK: - Characteristic Variables
+    
     private var goalTintChar: CBCharacteristic!
     private var SOTChar: CBCharacteristic!
     private var DrvStChar: CBCharacteristic!
@@ -17,9 +23,6 @@ class ViewController: UIViewController {
     private var humidityChar: CBCharacteristic!
     private var ambLightChar: CBCharacteristic!
     private var accelChar: CBCharacteristic!
-    private var peripheralArray: [CBPeripheral] = []
-    private var rssiArray = [NSNumber]()
-    private var timer = Timer()
     var currentTintLevel: Int!
     let defaults = UserDefaults.standard
 
@@ -28,6 +31,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var peripheralFoundLabel: UILabel!
     @IBOutlet weak var scanningButton: UIButton!
     @IBOutlet weak var homeButton: UIButton!
+    
+    
     
     @IBAction func scanningAction(_ sender: Any) {
     startScanning()
@@ -433,7 +438,7 @@ extension ViewController: UITableViewDelegate {
         if segue.identifier == "pairingToHome" {
             let destVC = segue.destination as? Home_Interface
             
-            destVC?.currTintLevel = currentTintLevel
+            destVC?.currentTintLevel = currentTintLevel
         }
     }
     
