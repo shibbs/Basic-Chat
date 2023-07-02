@@ -30,7 +30,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var peripheralFoundLabel: UILabel!
     @IBOutlet weak var scanningButton: UIButton!
-    @IBOutlet weak var homeButton: UIButton!
     
     
     
@@ -40,9 +39,6 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
       super.viewDidLoad()
-        
-      homeButton.setTitle("", for: .normal)
-      homeButton.isHidden = true
 
       self.tableView.delegate = self
       self.tableView.dataSource = self
@@ -51,10 +47,11 @@ class ViewController: UIViewController {
       centralManager = CBCentralManager(delegate: self, queue: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.parseSOTPerc(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
+        
     }
 
     override func viewDidAppear(_ animated: Bool) {
-      //disconnectFromDevice()
+      disconnectFromDevice()
       self.tableView.reloadData()
       //startScanning()
     }

@@ -48,19 +48,6 @@
                                     </label>
                                 </subviews>
                             </stackView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b0A-q5-Dvu">
-                                <rect key="frame" x="337" y="59" width="40" height="43"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="40" id="5Jq-Aj-H5F"/>
-                                    <constraint firstAttribute="height" constant="43" id="Jyj-4K-idz"/>
-                                </constraints>
-                                <color key="tintColor" name="Color"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="house.fill" catalog="system"/>
-                                <connections>
-                                    <action selector="segueToHome:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WZQ-YQ-c4e"/>
-                                </connections>
-                            </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" sectionIndexMinimumDisplayRowCount="8" rowHeight="47" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5Ud-Yr-D9H">
                                 <rect key="frame" x="0.0" y="216" width="393" height="602"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -137,8 +124,6 @@
                             <constraint firstItem="5Ud-Yr-D9H" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="Ohf-ZS-Zsk"/>
                             <constraint firstItem="5Ud-Yr-D9H" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Slg-3u-j4O"/>
                             <constraint firstItem="5Ud-Yr-D9H" firstAttribute="top" secondItem="8aJ-bs-EG6" secondAttribute="bottom" constant="6.3300000000000001" id="ahA-La-525"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="b0A-q5-Dvu" secondAttribute="trailing" constant="16" id="qkH-Qb-TWL"/>
-                            <constraint firstItem="b0A-q5-Dvu" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="qxo-bt-aeJ"/>
                             <constraint firstItem="5Ud-Yr-D9H" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="ut9-cD-Tay"/>
                             <constraint firstItem="8aJ-bs-EG6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="36" id="x9e-VC-UwU"/>
                             <constraint firstItem="8aJ-bs-EG6" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="41" id="y7O-fD-cbE"/>
@@ -146,7 +131,6 @@
                     </view>
                     <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="Zzz-7U-QEe"/>
                     <connections>
-                        <outlet property="homeButton" destination="b0A-q5-Dvu" id="X4Q-UT-mEW"/>
                         <outlet property="peripheralFoundLabel" destination="Yva-ye-IbR" id="tgW-If-vma"/>
                         <outlet property="scanningButton" destination="mWF-kO-Gxc" id="W2D-RX-Wsj"/>
                         <outlet property="tableView" destination="5Ud-Yr-D9H" id="MQg-TN-ifU"/>
