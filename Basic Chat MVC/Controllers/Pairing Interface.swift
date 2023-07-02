@@ -8,7 +8,7 @@ class ViewController: UIViewController {
 
     // Data
     private var centralManager: CBCentralManager!
-    private var bluefruitPeripheral: CBPeripheral!
+    private var bluetoothPeripheral: CBPeripheral!
     private var peripheralArray: [CBPeripheral] = []
     private var rssiArray = [NSNumber]()
     private var timer = Timer()
@@ -54,7 +54,7 @@ class ViewController: UIViewController {
     }
 
     override func viewDidAppear(_ animated: Bool) {
-      //disconnectFromDevice()
+      disconnectFromDevice()
       self.tableView.reloadData()
       //startScanning()
     }
@@ -64,21 +64,21 @@ class ViewController: UIViewController {
     }
     
     func connectToDevice() -> Void {
-      centralManager?.connect(bluefruitPeripheral!, options: nil)
-        let string = String(describing: bluefruitPeripheral.identifier)
+      centralManager?.connect(bluetoothPeripheral!, options: nil)
+        let string = String(describing: bluetoothPeripheral.identifier)
         print("string: " + string)
-        defaults.setValue(String(describing: bluefruitPeripheral.identifier), forKey: "LastConnectedUUID")
-        print(bluefruitPeripheral.identifier)
+        defaults.setValue(String(describing: bluetoothPeripheral.identifier), forKey: "LastConnectedUUID")
+        print(bluetoothPeripheral.identifier)
   }
 
     func disconnectFromDevice() -> Void {
-      if bluefruitPeripheral != nil {
-        centralManager?.cancelPeripheralConnection(bluefruitPeripheral!)
+      if bluetoothPeripheral != nil {
+        centralManager?.cancelPeripheralConnection(bluetoothPeripheral!)
       }
   }
 
     func removeArrayData() -> Void {
-      centralManager.cancelPeripheralConnection(bluefruitPeripheral)
+      centralManager.cancelPeripheralConnection(bluetoothPeripheral)
            rssiArray.removeAll()
            peripheralArray.removeAll()
        }
@@ -92,19 +92,6 @@ class ViewController: UIViewController {
         centralManager?.scanForPeripherals(withServices: []) //CBUUIDs.BLEService_UUID])
         scanningButton.setTitle("Scanning...", for: .normal)
         scanningButton.isEnabled = false
-        
-        if let lastUUID = defaults.value(forKey: "LastConnectedUUID") {
-            for periph in peripheralArray {
-                if String(describing: lastUUID) == String(describing: periph.identifier) {
-
-                    BlePeripheral.connectedPeripheral = periph
-
-                    connectToDevice()
-
-                    self.performSegue(withIdentifier: "pairingToHome", sender: nil)
-                }
-            }
-        }
         
         Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
             self.stopScanning()
@@ -139,7 +126,7 @@ class ViewController: UIViewController {
 
     func delayedConnection() -> Void {
 
-    BlePeripheral.connectedPeripheral = bluefruitPeripheral
+    BlePeripheral.connectedPeripheral = bluetoothPeripheral
 
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
       //Once connected, move to new view controller to manager incoming and outgoing data
@@ -194,7 +181,25 @@ extension ViewController: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
       print("Function: \(#function),Line: \(#line)")
 
-      bluefruitPeripheral = peripheral
+      bluetoothPeripheral = peripheral
+        
+      bluetoothPeripheral.delegate = self
+      
+        
+//        if let lastUUID = defaults.value(forKey: "LastConnectedUUID") {
+//            if String(describing: lastUUID) == String(describing: peripheral.identifier) {
+//
+//                BlePeripheral.connectedPeripheral = peripheral
+//
+//
+//                stopScanning()
+//
+//                delayedConnection()
+//
+//            }
+//        }
+        
+        
       print("Peripheral found");
         let p_name = peripheral.name ?? ""; //get the name and cast to null if empty
       if peripheralArray.contains(peripheral) {
@@ -204,7 +209,7 @@ extension ViewController: CBCentralManagerDelegate {
         rssiArray.append(RSSI)
           peripheralFoundLabel.text = "Peripherals Found: \(peripheralArray.count)"
 
-          bluefruitPeripheral.delegate = self
+          bluetoothPeripheral.delegate = self
 
           print("Peripheral Discovered: \(peripheral)")
 
@@ -217,7 +222,8 @@ extension ViewController: CBCentralManagerDelegate {
     // MARK: - Connect
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         stopScanning()
-        bluefruitPeripheral.discoverServices([CBUUIDs.cService_UUID, CBUUIDs.sService_UUID])
+        bluetoothPeripheral.delegate = self
+        bluetoothPeripheral.discoverServices([CBUUIDs.cService_UUID, CBUUIDs.sService_UUID])
     }
 }
 
@@ -226,7 +232,9 @@ extension ViewController: CBCentralManagerDelegate {
 extension ViewController: CBPeripheralDelegate {
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-
+        
+      peripheral.delegate = self
+        
       guard let services = peripheral.services else { return }
       for service in services {
         peripheral.discoverCharacteristics(nil, for: service)
@@ -421,9 +429,9 @@ extension ViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-      bluefruitPeripheral = peripheralArray[indexPath.row]
+      bluetoothPeripheral = peripheralArray[indexPath.row]
 
-        BlePeripheral.connectedPeripheral = bluefruitPeripheral
+        BlePeripheral.connectedPeripheral = bluetoothPeripheral
 
         connectToDevice()
 
@@ -436,6 +444,7 @@ extension ViewController: UITableViewDelegate {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
          
         if segue.identifier == "pairingToHome" {
+            
             let destVC = segue.destination as? Home_Interface
             
             destVC?.currentTintLevel = currentTintLevel

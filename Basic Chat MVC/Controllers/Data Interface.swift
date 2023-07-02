@@ -39,17 +39,17 @@ class Data_Interface: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.parseATSChar(notification:)), name: NSNotification.Name(rawValue: "NotifyATS"), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.parseTempChar(notification:)), name: NSNotification.Name(rawValue: "NotifyTemp"), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.parseHumidityChar(notification:)), name: NSNotification.Name(rawValue: "NotifyHumidity"), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.parseAmbLightChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAL"), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.parseCoulombCtChar(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.parseAccelChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAccel"), object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.parseATSChar(notification:)), name: NSNotification.Name(rawValue: "NotifyATS"), object: nil)
+//        
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.parseTempChar(notification:)), name: NSNotification.Name(rawValue: "NotifyTemp"), object: nil)
+//        
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.parseHumidityChar(notification:)), name: NSNotification.Name(rawValue: "NotifyHumidity"), object: nil)
+//        
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.parseAmbLightChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAL"), object: nil)
+//        
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.parseCoulombCtChar(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
+//        
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.parseAccelChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAccel"), object: nil)
         
         homeButton.setTitle("", for: .normal)
         
@@ -133,7 +133,7 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": temp from parse method")
+        print(text + ": temp from parse method 2")
         
         //MARK: - Handle Signed Bits Accordingly Below
         
@@ -163,7 +163,7 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": amblight from parse method")
+        print(text + ": amblight from parse method 2")
         
         separateAmbLightChar(rawChar: text)
         
