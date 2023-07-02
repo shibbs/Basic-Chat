@@ -128,7 +128,7 @@ class ViewController: UIViewController {
 
     BlePeripheral.connectedPeripheral = bluetoothPeripheral
 
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
       //Once connected, move to new view controller to manager incoming and outgoing data
 //      let storyboard = UIStoryboard(name: "Main", bundle: nil)
 
@@ -192,7 +192,6 @@ extension ViewController: CBCentralManagerDelegate {
 //                BlePeripheral.connectedPeripheral = peripheral
 //
 //
-//                stopScanning()
 //
 //                delayedConnection()
 //
