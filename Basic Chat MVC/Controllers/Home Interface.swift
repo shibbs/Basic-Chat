@@ -8,9 +8,9 @@
 import UIKit
 import SwiftUI
 import CoreBluetooth
-import Darwin
 
 class Home_Interface: UIViewController {
+    
     
     //MARK: Outlets/Variables
     
@@ -36,7 +36,7 @@ class Home_Interface: UIViewController {
     
     
     //MARK: - ViewDidLoad
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -54,7 +54,7 @@ class Home_Interface: UIViewController {
         tintProgress.progress = 0
         tintProgress.isHidden = true
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.parseSOTPerc(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.parseSOTPerc(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.parseDrvSt(notification:)), name: NSNotification.Name(rawValue: "NotifyDrvSt"), object: nil)
         
@@ -185,7 +185,7 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": temp from parse method")
+        print(text + ": temp from parse method 1")
         
         let t = Int(text, radix: 16)!
         let value = Float(t)
@@ -209,7 +209,7 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": amblight from parse method")
+        print(text + ": amblight from parse method 1")
         
         separateAmbLightChar(rawChar: text)
     }
@@ -270,6 +270,7 @@ class Home_Interface: UIViewController {
             destVC?.opticTrans = opticTrans
             destVC?.coulombCt = Float(currentTintLevel)
             destVC?.accelChar = accelChar
+            
         }
     }
 }
