@@ -190,8 +190,11 @@ extension ViewController: CBCentralManagerDelegate {
                 connectToDevice()
                 
                 delayedConnection()
+                
+                connectToDevice()
 
                 self.performSegue(withIdentifier: "pairingToHome", sender: nil)
+                
             }
         }
         
