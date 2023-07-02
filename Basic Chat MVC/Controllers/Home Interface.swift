@@ -260,11 +260,7 @@ class Home_Interface: UIViewController {
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
          
-        if segue.identifier == "unwindToPairing" {
-            let destVC = segue.destination as? ViewController
-            destVC?.homeButton.isHidden = false
-        }
-        else if segue.identifier == "homeToData" {
+        if segue.identifier == "homeToData" {
             let destVC = segue.destination as? Data_Interface
             destVC?.autoTintChar = autoTintChar
             destVC?.temp = temp

@@ -30,7 +30,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var peripheralFoundLabel: UILabel!
     @IBOutlet weak var scanningButton: UIButton!
-    @IBOutlet weak var homeButton: UIButton!
     
     
     
@@ -40,9 +39,6 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
       super.viewDidLoad()
-        
-      homeButton.setTitle("", for: .normal)
-      homeButton.isHidden = true
 
       self.tableView.delegate = self
       self.tableView.dataSource = self
@@ -92,20 +88,7 @@ class ViewController: UIViewController {
         centralManager?.scanForPeripherals(withServices: []) //CBUUIDs.BLEService_UUID])
         scanningButton.setTitle("Scanning...", for: .normal)
         scanningButton.isEnabled = false
-        
-        if let lastUUID = defaults.value(forKey: "LastConnectedUUID") {
-            for periph in peripheralArray {
-                if String(describing: lastUUID) == String(describing: periph.identifier) {
-
-                    BlePeripheral.connectedPeripheral = periph
-
-                    connectToDevice()
-
-                    self.performSegue(withIdentifier: "pairingToHome", sender: nil)
-                }
-            }
-        }
-        
+                
         Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
             self.stopScanning()
         }
@@ -195,6 +178,18 @@ extension ViewController: CBCentralManagerDelegate {
       print("Function: \(#function),Line: \(#line)")
 
       bluefruitPeripheral = peripheral
+        
+        if let lastUUID = defaults.value(forKey: "LastConnectedUUID") {
+            if String(describing: lastUUID) == String(describing: peripheral.identifier) {
+
+                BlePeripheral.connectedPeripheral = peripheral
+
+                stopScanning()
+                
+                delayedConnection()
+            }
+        }
+        
       print("Peripheral found");
         let p_name = peripheral.name ?? ""; //get the name and cast to null if empty
       if peripheralArray.contains(peripheral) {
