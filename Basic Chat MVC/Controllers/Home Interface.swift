@@ -44,7 +44,11 @@ class Home_Interface: UIViewController {
         
         slider.transform = CGAffineTransform(rotationAngle: CGFloat.pi / -2)
         
-        slider.isEnabled = true
+        slider.isEnabled = false
+        
+        sensorData.isEnabled = false
+        
+        tintValue.text = "\u{2014}% Tint"
         
         update()
         
@@ -85,12 +89,9 @@ class Home_Interface: UIViewController {
     
     func update() {
         
-        print(String(currentTintLevel) + " from update")
-        
         if goalTintLevel == nil {
             
             statusText.text = "Idle"
-//            slider.isEnabled = true
             slider.value = Float(currentTintLevel)
             tintValue.text = String(Int(round(slider.value))) + "% Tint"
             
@@ -155,6 +156,8 @@ class Home_Interface: UIViewController {
         
         let cur = Int(text, radix: 16)!
         currentTintLevel = cur
+        
+        slider.isEnabled = true
         
         update()
         
@@ -222,6 +225,8 @@ class Home_Interface: UIViewController {
         print(text + ": accel from parse method")
         
         accelChar = text
+        
+        sensorData.isEnabled = true
     }
     
         @IBAction func valueOut(_ sender: Any) {
@@ -261,7 +266,9 @@ class Home_Interface: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
          
         if segue.identifier == "homeToData" {
+            
             let destVC = segue.destination as? Data_Interface
+            
             destVC?.autoTintChar = autoTintChar
             destVC?.temp = temp
             destVC?.humidity = humidity
@@ -270,6 +277,13 @@ class Home_Interface: UIViewController {
             destVC?.opticTrans = opticTrans
             destVC?.coulombCt = Float(currentTintLevel)
             destVC?.accelChar = accelChar
+            
+        }
+        else if segue.identifier == "unwindToPairing" {
+            
+            let destVC = segue.destination as? ViewController
+            
+            destVC?.startUp = false
         }
     }
 }

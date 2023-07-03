@@ -193,8 +193,6 @@ class Data_Interface: UIViewController {
         print(text + ": accel from parse method")
         
         accelChar = text
-        
-        update()
     }
     
     

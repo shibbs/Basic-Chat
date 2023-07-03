@@ -23,7 +23,9 @@ class ViewController: UIViewController {
     private var humidityChar: CBCharacteristic!
     private var ambLightChar: CBCharacteristic!
     private var accelChar: CBCharacteristic!
+    
     var currentTintLevel: Int!
+    var startUp: Bool!
     let defaults = UserDefaults.standard
 
     // UI
@@ -34,7 +36,8 @@ class ViewController: UIViewController {
     
     
     @IBAction func scanningAction(_ sender: Any) {
-    startScanning()
+        startUp = false
+        startScanning()
   }
 
     override func viewDidLoad() {
@@ -56,12 +59,10 @@ class ViewController: UIViewController {
       //startScanning()
     }
     
-    @IBAction func segueToHome(_ sender: Any) {
-        performSegue(withIdentifier: "pairingToHome", sender: nil)
-    }
-    
     func connectToDevice() -> Void {
       centralManager?.connect(bluetoothPeripheral!, options: nil)
+        
+        //User Defaults (for auto-connect to last peripheral)
         let string = String(describing: bluetoothPeripheral.identifier)
         print("string: " + string)
         defaults.setValue(String(describing: bluetoothPeripheral.identifier), forKey: "LastConnectedUUID")
@@ -81,18 +82,36 @@ class ViewController: UIViewController {
        }
 
     func startScanning() -> Void {
-        // Remove prior data
-        peripheralArray.removeAll()
-        rssiArray.removeAll()
-        // Start Scanning
-        print("Started startScanning");
-        centralManager?.scanForPeripherals(withServices: [])
-        scanningButton.setTitle("Scanning...", for: .normal)
-        scanningButton.isEnabled = false
         
-        
-        Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
-            self.stopScanning()
+        if !startUp {
+            // Remove prior data
+            peripheralArray.removeAll()
+            rssiArray.removeAll()
+            // Start Scanning
+            print("Started startScanning")
+            scanningButton.setTitle("Scanning...", for: .normal)
+            scanningButton.isEnabled = false
+            centralManager?.scanForPeripherals(withServices: [])
+            
+            
+            Timer.scheduledTimer(withTimeInterval: 5, repeats: false) {_ in
+                self.stopScanning()
+            }
+        }
+        else if startUp {
+            // Remove prior data
+            peripheralArray.removeAll()
+            rssiArray.removeAll()
+            // Start Scanning
+            print("Started startScanning")
+            scanningButton.setTitle("Scanning...", for: .normal)
+            scanningButton.isEnabled = false
+            centralManager?.scanForPeripherals(withServices: [])
+            
+            
+            Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) {_ in
+                self.stopScanning()
+            }
         }
     }
 
@@ -161,7 +180,8 @@ extension ViewController: CBCentralManagerDelegate {
 
         case .poweredOn:
             print("Is Powered On.")
-            startScanning()
+          startUp = true
+          startScanning()
         case .unsupported:
             print("Is Unsupported.")
         case .unauthorized:
@@ -177,7 +197,8 @@ extension ViewController: CBCentralManagerDelegate {
 
     // MARK: - Discover
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-      print("Function: \(#function),Line: \(#line)")
+      
+        print("Function: \(#function),Line: \(#line)")
 
       bluetoothPeripheral = peripheral
         
@@ -187,14 +208,12 @@ extension ViewController: CBCentralManagerDelegate {
                 BlePeripheral.connectedPeripheral = bluetoothPeripheral
                 bluetoothPeripheral.delegate = self
 
-                connectToDevice()
-                
-                delayedConnection()
+                stopScanning()
                 
                 connectToDevice()
 
-                self.performSegue(withIdentifier: "pairingToHome", sender: nil)
-                
+                self.performSegue(withIdentifier: "pairingToHomeAuto", sender: nil)
+
             }
         }
         
@@ -229,6 +248,7 @@ extension ViewController: CBCentralManagerDelegate {
 extension ViewController: CBPeripheralDelegate {
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        
         
       guard let services = peripheral.services else { return }
       for service in services {
@@ -437,11 +457,11 @@ extension ViewController: UITableViewDelegate {
     @IBAction func unwindToPairing(segue: UIStoryboardSegue) {}
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         
+
         if segue.identifier == "pairingToHome" {
             let destVC = segue.destination as? Home_Interface
-            
-//            destVC?.currentTintLevel = currentTintLevel
+
+            destVC?.currentTintLevel = currentTintLevel
         }
     }
     
