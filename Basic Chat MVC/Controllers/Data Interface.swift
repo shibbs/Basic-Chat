@@ -126,6 +126,7 @@ class Data_Interface: UIViewController {
         print(text + ": ATSChar from parse method")
         
         autoTintChar = text
+        
     }
     
     @objc func parseTempChar(notification: Notification) -> Void {

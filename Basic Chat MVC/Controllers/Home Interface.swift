@@ -23,7 +23,7 @@ class Home_Interface: UIViewController {
     
     private var goalTintLevel: Int!
     private var tintProgressLength: Int!
-    var currentTintLevel = 0
+    var currentTintLevel = -1
     
     var driveState: String! = ""
     var autoTintChar: String! = ""
@@ -88,6 +88,11 @@ class Home_Interface: UIViewController {
     }
     
     func update() {
+        
+        if currentTintLevel != -1 {
+            
+            slider.isEnabled = true
+        }
         
         if goalTintLevel == nil {
             

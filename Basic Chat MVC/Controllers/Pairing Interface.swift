@@ -83,36 +83,23 @@ class ViewController: UIViewController {
 
     func startScanning() -> Void {
         
-        if !startUp {
-            // Remove prior data
-            peripheralArray.removeAll()
-            rssiArray.removeAll()
-            // Start Scanning
-            print("Started startScanning")
-            scanningButton.setTitle("Scanning...", for: .normal)
-            scanningButton.isEnabled = false
-            centralManager?.scanForPeripherals(withServices: [])
-            
-            
-            Timer.scheduledTimer(withTimeInterval: 5, repeats: false) {_ in
-                self.stopScanning()
-            }
+        // Remove prior data
+        peripheralArray.removeAll()
+        rssiArray.removeAll()
+        self.tableView.reloadData()
+        peripheralFoundLabel.text = "Peripherals Found: \(peripheralArray.count)"
+        
+        // Start Scanning
+        print("Started startScanning")
+        scanningButton.setTitle("Scanning...", for: .normal)
+        scanningButton.isEnabled = false
+        centralManager?.scanForPeripherals(withServices: [])
+
+
+        Timer.scheduledTimer(withTimeInterval: 5, repeats: false) {_ in
+            self.stopScanning()
         }
-        else if startUp {
-            // Remove prior data
-            peripheralArray.removeAll()
-            rssiArray.removeAll()
-            // Start Scanning
-            print("Started startScanning")
-            scanningButton.setTitle("Scanning...", for: .normal)
-            scanningButton.isEnabled = false
-            centralManager?.scanForPeripherals(withServices: [])
-            
-            
-            Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) {_ in
-                self.stopScanning()
-            }
-        }
+        
     }
 
     func scanForBLEDevices() -> Void {
@@ -202,18 +189,21 @@ extension ViewController: CBCentralManagerDelegate {
 
       bluetoothPeripheral = peripheral
         
-        if let lastUUID = defaults.value(forKey: "LastConnectedUUID") {
-            if String(describing: lastUUID) == String(describing: bluetoothPeripheral.identifier) {
+        if startUp {
+            
+            if let lastUUID = defaults.value(forKey: "LastConnectedUUID") {
+                if String(describing: lastUUID) == String(describing: bluetoothPeripheral.identifier) {
 
-                BlePeripheral.connectedPeripheral = bluetoothPeripheral
-                bluetoothPeripheral.delegate = self
+                    BlePeripheral.connectedPeripheral = bluetoothPeripheral
+                    bluetoothPeripheral.delegate = self
 
-                stopScanning()
-                
-                connectToDevice()
+                    stopScanning()
+                    
+                    connectToDevice()
 
-                self.performSegue(withIdentifier: "pairingToHomeAuto", sender: nil)
+                    self.performSegue(withIdentifier: "pairingToHomeAuto", sender: nil)
 
+                }
             }
         }
         
@@ -444,7 +434,8 @@ extension ViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-      bluetoothPeripheral = peripheralArray[indexPath.row]
+      stopScanning()
+        bluetoothPeripheral = peripheralArray[indexPath.row]
 
         BlePeripheral.connectedPeripheral = bluetoothPeripheral
 
