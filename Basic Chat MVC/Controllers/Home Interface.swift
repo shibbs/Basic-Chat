@@ -8,7 +8,6 @@
 import UIKit
 import SwiftUI
 import CoreBluetooth
-import Darwin
 
 class Home_Interface: UIViewController {
     
@@ -33,6 +32,8 @@ class Home_Interface: UIViewController {
     var extLight: Float!
     var opticTrans: Float!
     var accelChar: String! = ""
+    
+    var connectionState = BlePeripheral.connectedPeripheral!.state
     
     
     //MARK: - ViewDidLoad
@@ -236,22 +237,21 @@ class Home_Interface: UIViewController {
     
         @IBAction func valueOut(_ sender: Any) {
         
-        var val = Int(round(slider.value))
-        let cur = Int(currentTintLevel)
+            var val = Int(round(slider.value))
+            let cur = Int(currentTintLevel)
         
-        if slider.value != Float(currentTintLevel) {
+            if slider.value != Float(currentTintLevel) {
             
-            tintProgress.progress = 0
-            tintProgress.isHidden = false
-            goalTintLevel = val
-            tintProgressLength = abs(goalTintLevel - cur)
+                tintProgress.progress = 0
+                tintProgress.isHidden = false
+                goalTintLevel = val
+                tintProgressLength = abs(goalTintLevel - cur)
             
-            statusText.text = "Working..."
+                statusText.text = "Working..."
             
-            writeOutgoingValue(value: &val)
+                writeOutgoingValue(value: &val)
+            }
         }
-        
-    }
     
     
     // MARK: - Navigation
