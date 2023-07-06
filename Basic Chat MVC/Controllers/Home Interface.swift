@@ -33,8 +33,6 @@ class Home_Interface: UIViewController {
     var opticTrans: Float!
     var accelChar: String! = ""
     
-    var connectionState = BlePeripheral.connectedPeripheral!.state
-    
     
     //MARK: - ViewDidLoad
     
@@ -128,6 +126,60 @@ class Home_Interface: UIViewController {
     @IBAction func writeValueToInterface(_ sender: UISlider) {
         tintValue.text = String(Int(round(slider.value))) + "% Tint"
     }
+    
+    @IBAction func valueOut(_ sender: Any) {
+    
+        switch BlePeripheral.connectedPeripheral!.state {
+        case .disconnected:
+            slider.isEnabled = false
+            sensorData.isEnabled = false
+            statusText.text = "Device disconnected. Please reconnect."
+        case .disconnecting:
+            slider.isEnabled = false
+            sensorData.isEnabled = false
+            statusText.text = "Device disconnected. Please reconnect."
+        case .connecting:
+            print("Still connecting")
+        case.connected:
+            var val = Int(round(slider.value))
+            let cur = Int(currentTintLevel)
+                    
+            if val != currentTintLevel {
+                        
+                tintProgress.progress = 0
+                tintProgress.isHidden = false
+                goalTintLevel = val
+                tintProgressLength = abs(goalTintLevel - cur)
+                        
+                statusText.text = "Working..."
+                        
+                writeOutgoingValue(value: &val)
+            }
+        @unknown default:
+            print("Unknown error")
+        }
+    }
+    
+    @IBAction func sensorDataPressed(_ sender: Any) {
+        
+        switch BlePeripheral.connectedPeripheral!.state {
+        case .disconnected:
+            slider.isEnabled = false
+            sensorData.isEnabled = false
+            statusText.text = "Device disconnected. Please reconnect."
+        case .disconnecting:
+            slider.isEnabled = false
+            sensorData.isEnabled = false
+            statusText.text = "Device disconnected. Please reconnect."
+        case .connecting:
+            print("Still connecting")
+        case.connected:
+            performSegue(withIdentifier: "homeToData", sender: nil)
+        @unknown default:
+            print("Unknown error")
+        }
+    }
+    
     
     func separateAmbLightChar(rawChar: String) {
         
@@ -235,23 +287,7 @@ class Home_Interface: UIViewController {
         sensorData.isEnabled = true
     }
     
-        @IBAction func valueOut(_ sender: Any) {
         
-            var val = Int(round(slider.value))
-            let cur = Int(currentTintLevel)
-        
-            if slider.value != Float(currentTintLevel) {
-            
-                tintProgress.progress = 0
-                tintProgress.isHidden = false
-                goalTintLevel = val
-                tintProgressLength = abs(goalTintLevel - cur)
-            
-                statusText.text = "Working..."
-            
-                writeOutgoingValue(value: &val)
-            }
-        }
     
     
     // MARK: - Navigation
@@ -289,6 +325,11 @@ class Home_Interface: UIViewController {
             let destVC = segue.destination as? ViewController
             
             destVC?.startUp = false
+            destVC?.removeArrayData()
+            destVC?.tableView.reloadData()
+            destVC?.peripheralFoundLabel.text = "Peripherals Found: 0"
+            destVC?.scanningButton.setTitle("Scan", for: .normal)
+            destVC?.scanningButton.isEnabled = true
         }
     }
 }

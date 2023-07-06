@@ -286,7 +286,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="pencil.circle.fill" catalog="system"/>
                                 <connections>
-                                    <action selector="goToData:" destination="R5k-cl-Bq2" eventType="touchUpInside" id="XTd-aY-FNJ"/>
+                                    <action selector="sensorDataPressed:" destination="R5k-cl-Bq2" eventType="touchUpInside" id="41I-Ab-4eb"/>
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="OPg-Gg-MYB">

@@ -60,7 +60,11 @@ class ViewController: UIViewController {
     }
     
     func connectToDevice() -> Void {
-      centralManager?.connect(bluetoothPeripheral!, options: nil)
+      
+        stopScanning()
+        centralManager?.connect(bluetoothPeripheral!, options: nil)
+        scanningButton.setTitle("Connecting...", for: .normal)
+        scanningButton.isEnabled = false
         
         //User Defaults (for auto-connect to last peripheral)
         let string = String(describing: bluetoothPeripheral.identifier)
@@ -98,24 +102,26 @@ class ViewController: UIViewController {
 
         Timer.scheduledTimer(withTimeInterval: 5, repeats: false) {_ in
             self.stopScanning()
+            self.scanningButton.setTitle("Scan", for: .normal)
+            self.scanningButton.isEnabled = true
         }
         
     }
 
-    func scanForBLEDevices() -> Void {
-      // Remove prior data
-      peripheralArray.removeAll()
-      rssiArray.removeAll()
-      // Start Scanning
-        print("Started ScanForBLEDevice");
-      centralManager?.scanForPeripherals(withServices: [] , options: [CBCentralManagerScanOptionAllowDuplicatesKey:true])
-        scanningButton.setTitle("Scanning...", for: .normal)
-        scanningButton.isEnabled = false
-
-      Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
-          self.stopScanning()
-      }
-  }
+//    func scanForBLEDevices() -> Void {
+//      // Remove prior data
+//      peripheralArray.removeAll()
+//      rssiArray.removeAll()
+//      // Start Scanning
+//        print("Started ScanForBLEDevice");
+//      centralManager?.scanForPeripherals(withServices: [] , options: [CBCentralManagerScanOptionAllowDuplicatesKey:true])
+//        scanningButton.setTitle("Scanning...", for: .normal)
+//        scanningButton.isEnabled = false
+//
+//      Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
+//          self.stopScanning()
+//      }
+//  }
 
     func stopTimer() -> Void {
       // Stops Timer
@@ -123,8 +129,6 @@ class ViewController: UIViewController {
     }
 
     func stopScanning() -> Void {
-        scanningButton.setTitle("Scan", for: .normal)
-        scanningButton.isEnabled = true
         centralManager?.stopScan()
     }
 
@@ -196,8 +200,6 @@ extension ViewController: CBCentralManagerDelegate {
 
                     BlePeripheral.connectedPeripheral = bluetoothPeripheral
                     bluetoothPeripheral.delegate = self
-
-                    stopScanning()
                     
                     connectToDevice()
 
@@ -434,7 +436,7 @@ extension ViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-      stopScanning()
+//      stopScanning()
         bluetoothPeripheral = peripheralArray[indexPath.row]
 
         BlePeripheral.connectedPeripheral = bluetoothPeripheral
@@ -452,7 +454,9 @@ extension ViewController: UITableViewDelegate {
         if segue.identifier == "pairingToHome" {
             let destVC = segue.destination as? Home_Interface
 
-            destVC?.currentTintLevel = currentTintLevel
+            if let CTL = currentTintLevel {
+                destVC?.currentTintLevel = CTL
+            }
         }
     }
     
