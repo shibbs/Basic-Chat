@@ -234,6 +234,7 @@ class Data_Interface: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
          
+        //if more views are added to the view heirarchy after this view, these observers cannot be removed
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyATS"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyTemp"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyHumidity"), object: nil)

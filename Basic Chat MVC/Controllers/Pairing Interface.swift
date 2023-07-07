@@ -462,8 +462,6 @@ extension ViewController: UITableViewDelegate {
     @IBAction func unwindToPairing(segue: UIStoryboardSegue) {}
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifySOTP"), object: nil)
         
         if segue.identifier == "pairingToHome" {
             let destVC = segue.destination as? Home_Interface
@@ -471,10 +469,9 @@ extension ViewController: UITableViewDelegate {
             if let CTL = currentTintLevel {
                 destVC?.currentTintLevel = CTL
             }
-            
         }
+        
     }
-    
     
     
 }
