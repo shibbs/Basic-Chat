@@ -276,33 +276,59 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Ie-PS-EDy">
-                                <rect key="frame" x="337" y="71" width="40" height="40"/>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="AVo-dG-JOd">
+                                <rect key="frame" x="11.666666666666657" y="762.33333333333337" width="370" height="4"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="Iev-DY-aip"/>
-                                    <constraint firstAttribute="width" constant="40" id="R1R-la-QD7"/>
+                                    <constraint firstAttribute="width" constant="370" id="Iai-s8-Uzf"/>
                                 </constraints>
-                                <color key="tintColor" name="Color"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="pencil.circle.fill" catalog="system"/>
-                                <connections>
-                                    <action selector="sensorDataPressed:" destination="R5k-cl-Bq2" eventType="touchUpInside" id="41I-Ab-4eb"/>
-                                </connections>
-                            </button>
+                                <color key="progressTintColor" name="Color"/>
+                                <color key="trackTintColor" name="Color_Transparent"/>
+                            </progressView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="OPg-Gg-MYB">
-                                <rect key="frame" x="11.666666666666657" y="110" width="370" height="632.33333333333337"/>
+                                <rect key="frame" x="11.666666666666657" y="105" width="370" height="642.33333333333337"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="185" translatesAutoresizingMaskIntoConstraints="NO" id="oYy-Sp-fbT">
-                                        <rect key="frame" x="0.0" y="0.0" width="370" height="552.33333333333337"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="200" translatesAutoresizingMaskIntoConstraints="NO" id="oYy-Sp-fbT">
+                                        <rect key="frame" x="0.0" y="0.0" width="370" height="562.33333333333337"/>
                                         <subviews>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo_NameOnly" translatesAutoresizingMaskIntoConstraints="NO" id="Fs8-ku-FJk">
-                                                <rect key="frame" x="0.0" y="0.0" width="370" height="105"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="105" id="bc1-YB-m3I"/>
-                                                </constraints>
-                                            </imageView>
-                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="Rk8-Ir-8BC">
-                                                <rect key="frame" x="-2" y="290" width="374" height="51"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cUg-yy-tt9">
+                                                <rect key="frame" x="0.0" y="0.0" width="370" height="85"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CRx-J6-l2n">
+                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="85"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="50" id="Zzk-g9-N1X"/>
+                                                        </constraints>
+                                                        <state key="normal" title="Button"/>
+                                                        <buttonConfiguration key="configuration" style="plain" image="app.connected.to.app.below.fill" catalog="system">
+                                                            <color key="baseForegroundColor" name="Color"/>
+                                                        </buttonConfiguration>
+                                                        <connections>
+                                                            <action selector="goToPairing:" destination="R5k-cl-Bq2" eventType="touchUpInside" id="uiw-1R-EAp"/>
+                                                        </connections>
+                                                    </button>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo_NameOnly" translatesAutoresizingMaskIntoConstraints="NO" id="rD0-6L-d1G">
+                                                        <rect key="frame" x="50" y="0.0" width="270" height="85"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="85" id="Bcg-oy-mw4"/>
+                                                            <constraint firstAttribute="width" constant="270" id="PLG-lj-uRP"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Ie-PS-EDy">
+                                                        <rect key="frame" x="320" y="0.0" width="50" height="85"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="50" id="nk7-RM-qYE"/>
+                                                        </constraints>
+                                                        <color key="tintColor" name="Color"/>
+                                                        <state key="normal" title="Button"/>
+                                                        <buttonConfiguration key="configuration" style="plain" image="pencil.circle.fill" catalog="system"/>
+                                                        <connections>
+                                                            <action selector="sensorDataPressed:" destination="R5k-cl-Bq2" eventType="touchUpInside" id="41I-Ab-4eb"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                            </stackView>
+                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="50" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="Rk8-Ir-8BC">
+                                                <rect key="frame" x="-2" y="285" width="374" height="51"/>
                                                 <color key="tintColor" systemColor="labelColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="370" id="IKg-Dx-hHd"/>
@@ -319,7 +345,7 @@
                                                 </connections>
                                             </slider>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="xx% Tint" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="StL-oh-fab">
-                                                <rect key="frame" x="0.0" y="525" width="370" height="27.333333333333371"/>
+                                                <rect key="frame" x="0.0" y="535" width="370" height="27.333333333333371"/>
                                                 <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="20"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -327,7 +353,7 @@
                                         </subviews>
                                     </stackView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="//Status" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pfU-Kr-dM3">
-                                        <rect key="frame" x="0.0" y="602.33333333333337" width="370" height="30"/>
+                                        <rect key="frame" x="0.0" y="612.33333333333337" width="370" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="LOd-5v-yOh"/>
                                         </constraints>
@@ -337,41 +363,15 @@
                                     </label>
                                 </subviews>
                             </stackView>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="AVo-dG-JOd">
-                                <rect key="frame" x="11.666666666666657" y="757.33333333333337" width="370" height="4"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="370" id="Iai-s8-Uzf"/>
-                                </constraints>
-                                <color key="progressTintColor" name="Color"/>
-                                <color key="trackTintColor" name="Color_Transparent"/>
-                            </progressView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CRx-J6-l2n">
-                                <rect key="frame" x="16" y="71" width="40" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="IVg-w7-cNk"/>
-                                    <constraint firstAttribute="width" constant="40" id="eKm-mV-mGO"/>
-                                </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="app.connected.to.app.below.fill" catalog="system">
-                                    <color key="baseForegroundColor" name="Color"/>
-                                </buttonConfiguration>
-                                <connections>
-                                    <action selector="goToPairing:" destination="R5k-cl-Bq2" eventType="touchUpInside" id="uiw-1R-EAp"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="voZ-r6-X0p"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="OPg-Gg-MYB" firstAttribute="centerY" secondItem="im6-3V-DWU" secondAttribute="centerY" id="0GP-c8-ddq"/>
-                            <constraint firstItem="CRx-J6-l2n" firstAttribute="leading" secondItem="voZ-r6-X0p" secondAttribute="leading" constant="16" id="1g0-gA-12P"/>
-                            <constraint firstItem="voZ-r6-X0p" firstAttribute="trailing" secondItem="7Ie-PS-EDy" secondAttribute="trailing" constant="16" id="ATa-Wo-by6"/>
                             <constraint firstItem="OPg-Gg-MYB" firstAttribute="centerX" secondItem="im6-3V-DWU" secondAttribute="centerX" id="ByC-b0-hpr"/>
-                            <constraint firstItem="7Ie-PS-EDy" firstAttribute="top" secondItem="voZ-r6-X0p" secondAttribute="top" constant="12" id="Ncc-Op-V4I"/>
+                            <constraint firstItem="OPg-Gg-MYB" firstAttribute="centerX" secondItem="im6-3V-DWU" secondAttribute="centerX" id="QSa-mi-HcM"/>
                             <constraint firstItem="AVo-dG-JOd" firstAttribute="top" secondItem="OPg-Gg-MYB" secondAttribute="bottom" constant="15" id="R1J-zJ-R7W"/>
-                            <constraint firstItem="CRx-J6-l2n" firstAttribute="top" secondItem="voZ-r6-X0p" secondAttribute="top" constant="12" id="TIZ-Ib-ZLz"/>
                             <constraint firstItem="AVo-dG-JOd" firstAttribute="centerX" secondItem="im6-3V-DWU" secondAttribute="centerX" id="ZX2-UD-g1Y"/>
-                            <constraint firstItem="OPg-Gg-MYB" firstAttribute="centerY" secondItem="im6-3V-DWU" secondAttribute="centerY" id="lrL-NQ-Mto"/>
+                            <constraint firstItem="OPg-Gg-MYB" firstAttribute="centerY" secondItem="im6-3V-DWU" secondAttribute="centerY" id="swT-EW-IwN"/>
                             <constraint firstItem="OPg-Gg-MYB" firstAttribute="centerX" secondItem="im6-3V-DWU" secondAttribute="centerX" id="ucv-pe-HNf"/>
                         </constraints>
                     </view>
@@ -617,8 +617,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="vCt-sb-uFR"/>
-        <segue reference="Eb8-2v-WCR"/>
+        <segue reference="p2i-i3-7a2"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Logo_NameOnly" width="651" height="351"/>
