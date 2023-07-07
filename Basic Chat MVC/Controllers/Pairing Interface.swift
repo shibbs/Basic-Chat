@@ -49,13 +49,18 @@ class ViewController: UIViewController {
       // Manager
       centralManager = CBCentralManager(delegate: self, queue: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.parseSOTPerc(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.parseSOTPerc(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
         
     }
 
     override func viewDidAppear(_ animated: Bool) {
       disconnectFromDevice()
       self.tableView.reloadData()
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseSOTPerc(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifySOTP"), object: nil)
     }
     
     func connectToDevice() -> Void {

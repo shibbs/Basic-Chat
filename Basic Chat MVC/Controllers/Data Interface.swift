@@ -20,6 +20,7 @@ class Data_Interface: UIViewController {
     @IBOutlet weak var opticTransLabel: UILabel!
     @IBOutlet weak var alertsLabel: UILabel!
     @IBOutlet weak var coulombCountLabel: UILabel!
+    @IBOutlet weak var driveStateLabel: UILabel!
     @IBOutlet weak var autoTintSwitch: UISwitch! //not used anywhere other than parse function right now
     
     var autoTintChar: String!
@@ -32,6 +33,7 @@ class Data_Interface: UIViewController {
     var extLight: Float!
     var opticTrans: Float!
     var coulombCt: Float!
+    var driveState: String!
     
     
     //MARK: - ViewDidLoad
@@ -51,6 +53,8 @@ class Data_Interface: UIViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.parseAccelChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAccel"), object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseDrvSt(notification:)), name: NSNotification.Name(rawValue: "NotifyDrvSt"), object: nil)
+        
         homeButton.setTitle("", for: .normal)
         
         tempLabel.text = "\u{2014}" + "\u{00B0}" + " Celsius"
@@ -60,6 +64,7 @@ class Data_Interface: UIViewController {
         opticTransLabel.text = "\u{2014}%"
         alertsLabel.text = "\u{2014}"
         coulombCountLabel.text = "\u{2014}%"
+        driveStateLabel.text = "\u{2014}"
         
         update()
     }
@@ -113,6 +118,10 @@ class Data_Interface: UIViewController {
         else if accelChar == "01" { alertsLabel.text = "Bang/Smash Detected" }
         else if accelChar == "02" { alertsLabel.text = "Rain Detected" }
         
+        if driveState == "00" { driveStateLabel.text = "Idle" }
+        else if driveState == "01" { driveStateLabel.text = "Tinting" }
+        else if driveState == "02" { driveStateLabel.text = "Bleaching" }
+        
     }
     
     
@@ -126,6 +135,8 @@ class Data_Interface: UIViewController {
         print("auto tint state was updated")
         
         autoTintChar = text
+        
+        update()
         
     }
     
@@ -194,6 +205,18 @@ class Data_Interface: UIViewController {
         print(text + ": accel from parse method")
         
         accelChar = text
+        
+        update()
+    }
+    
+    @objc func parseDrvSt(notification: Notification) -> Void {
+        
+        var text = String(describing: notification.object)
+        text = text.replacingOccurrences(of: "Optional(<", with: "")
+        text = text.replacingOccurrences(of: ">)", with: "")
+        driveState = text
+        
+        update()
     }
     
     
@@ -241,6 +264,7 @@ class Data_Interface: UIViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyAL"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifySOTP"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyAccel"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyDrvSt"), object: nil)
         
         if segue.identifier == "unwindToHomeDisconnection" {
             let destVC = segue.destination as? Home_Interface

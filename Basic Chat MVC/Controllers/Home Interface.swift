@@ -50,6 +50,7 @@ class Home_Interface: UIViewController {
         sensorData.isEnabled = false
         
         tintValue.text = "\u{2014}% Tint"
+        statusText.text = "\u{2014}"
         
         update()
         
@@ -99,19 +100,13 @@ class Home_Interface: UIViewController {
             slider.isEnabled = true
         }
         
-        if goalTintLevel == nil {
-            
-            statusText.text = "Idle"
-            slider.value = Float(currentTintLevel)
-            tintValue.text = String(Int(round(slider.value))) + "% Tint"
-            
-        }
-        
         if goalTintLevel != nil {
             tintProgress.progress = ( 1 - ((Float(abs(goalTintLevel - currentTintLevel)) / Float(tintProgressLength!))))
         }
-        else {
+        else if goalTintLevel == nil {
             tintProgress.progress = 75
+            slider.value = Float(currentTintLevel)
+            tintValue.text = String(Int(round(slider.value))) + "% Tint"
         }
         
         if(driveState == "02") {
@@ -162,7 +157,7 @@ class Home_Interface: UIViewController {
                             
                     self.tintProgress.progress = 0
                     self.tintProgress.isHidden = false
-                    self.statusText.text = "\u{2014}"
+                    self.statusText.text = "Connected"
                     self.goalTintLevel = val
                     self.tintProgressLength = abs(self.goalTintLevel - cur)
                             
@@ -337,6 +332,7 @@ class Home_Interface: UIViewController {
             destVC?.opticTrans = opticTrans
             destVC?.coulombCt = Float(currentTintLevel)
             destVC?.accelChar = accelChar
+            destVC?.driveState = driveState
             
         }
         else if segue.identifier == "unwindToPairing" {
