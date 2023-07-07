@@ -41,7 +41,7 @@ class Home_Interface: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
+        addObservers()
         
         slider.transform = CGAffineTransform(rotationAngle: CGFloat.pi / -2)
         
@@ -52,31 +52,21 @@ class Home_Interface: UIViewController {
         tintValue.text = "\u{2014}% Tint"
         statusText.text = "\u{2014}"
         
-        update()
-        
         sensorData.setTitle("", for: .normal)
         pairing.setTitle("", for: .normal)
         
         tintProgress.progress = 0
         tintProgress.isHidden = true
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.parseSOTPerc(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.parseDrvSt(notification:)), name: NSNotification.Name(rawValue: "NotifyDrvSt"), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.parseATSChar(notification:)), name: NSNotification.Name(rawValue: "NotifyATS"), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.parseTempChar(notification:)), name: NSNotification.Name(rawValue: "NotifyTemp"), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.parseHumidityChar(notification:)), name: NSNotification.Name(rawValue: "NotifyHumidity"), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.parseAmbLightChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAL"), object: nil)
-
-        NotificationCenter.default.addObserver(self, selector: #selector(self.parseAccelChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAccel"), object: nil)
-        
         if deviceDisconnected {
             disconnected()
         }
+        
+//        Timer.scheduledTimer(withTimeInterval: 2, repeats: false) {_ in
+//            self.update()
+//        }
+        
+        update()
         
     }
     
@@ -136,6 +126,7 @@ class Home_Interface: UIViewController {
         statusText.text = "Checking connection..."
         slider.isEnabled = false
         sensorData.isEnabled = false
+        pairing.isEnabled = false
         tintProgress.isHidden = true
         
         Timer.scheduledTimer(withTimeInterval: 5, repeats: false) {_ in
@@ -149,6 +140,7 @@ class Home_Interface: UIViewController {
             case.connected:
                 self.slider.isEnabled = true
                 self.sensorData.isEnabled = true
+                self.pairing.isEnabled = true
                 
                 var val = Int(round(self.slider.value))
                 let cur = Int(self.currentTintLevel)
@@ -211,7 +203,35 @@ class Home_Interface: UIViewController {
     func disconnected() {
         slider.isEnabled = false
         sensorData.isEnabled = false
+        pairing.isEnabled = true
         statusText.text = "Device disconnected. Please reconnect."
+    }
+    
+    func addObservers() {
+        //order of observers must be maintained to keep from unwrapping nil optional when navigating to Sensor Data Interface
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseSOTPerc(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseDrvSt(notification:)), name: NSNotification.Name(rawValue: "NotifyDrvSt"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseATSChar(notification:)), name: NSNotification.Name(rawValue: "NotifyATS"), object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseTempChar(notification:)), name: NSNotification.Name(rawValue: "NotifyTemp"), object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseHumidityChar(notification:)), name: NSNotification.Name(rawValue: "NotifyHumidity"), object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseAmbLightChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAL"), object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseAccelChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAccel"), object: nil)
+    }
+    
+    func removeObservers() {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyATS"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyTemp"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyHumidity"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyAL"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifySOTP"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyAccel"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyDrvSt"), object: nil)
     }
     
     //MARK: - Parse Functions
@@ -222,7 +242,7 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-//        print(text)
+        print(text + "from home")
         
         let cur = Int(text, radix: 16)!
         currentTintLevel = cur
@@ -260,7 +280,7 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-//        print(text + ": temp from parse method")
+        print(text + "from home")
         
         let t = Int(text, radix: 16)!
         let value = Float(t)
@@ -272,7 +292,7 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-//        print(text + ": humidity from parse method")
+        print(text + "from home")
         
         let t = Int(text, radix: 16)!
         let value = Float(t)
@@ -284,7 +304,7 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-//        print(text + ": amblight from parse method")
+        print(text + "from home")
         
         separateAmbLightChar(rawChar: text)
     }
@@ -294,7 +314,7 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-//        print(text + ": accel from parse method")
+        print(text + "from home")
         
         accelChar = text
         
@@ -330,12 +350,14 @@ class Home_Interface: UIViewController {
             destVC?.intLight = intLight
             destVC?.extLight = extLight
             destVC?.opticTrans = opticTrans
-            destVC?.coulombCt = Float(currentTintLevel)
             destVC?.accelChar = accelChar
+            destVC?.coulombCt = Float(currentTintLevel)
             destVC?.driveState = driveState
             
         }
         else if segue.identifier == "unwindToPairing" {
+            
+            removeObservers()
             
             let destVC = segue.destination as? ViewController
             

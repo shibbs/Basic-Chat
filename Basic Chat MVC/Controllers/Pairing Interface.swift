@@ -25,6 +25,7 @@ class ViewController: UIViewController {
     private var accelChar: CBCharacteristic!
     
     var currentTintLevel: Int!
+    var driveState: String!
     var startUp: Bool!
     let defaults = UserDefaults.standard
 
@@ -49,18 +50,20 @@ class ViewController: UIViewController {
       // Manager
       centralManager = CBCentralManager(delegate: self, queue: nil)
         
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.parseSOTPerc(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
-        
     }
 
     override func viewDidAppear(_ animated: Bool) {
       disconnectFromDevice()
       self.tableView.reloadData()
+        
         NotificationCenter.default.addObserver(self, selector: #selector(self.parseSOTPerc(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseDrvSt(notification:)), name: NSNotification.Name(rawValue: "NotifyDrvSt"), object: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifySOTP"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyDrvSt"), object: nil)
     }
     
     func connectToDevice() -> Void {
@@ -162,6 +165,17 @@ class ViewController: UIViewController {
         let cur = Int(text, radix: 16)!
         currentTintLevel = cur
 
+    }
+    
+    @objc func parseDrvSt(notification: Notification) -> Void {
+        
+        var text = String(describing: notification.object)
+        text = text.replacingOccurrences(of: "Optional(<", with: "")
+        text = text.replacingOccurrences(of: ">)", with: "")
+        driveState = text
+        
+        print("drive state was updated (pairing)")
+        
     }
 }
 
@@ -473,6 +487,10 @@ extension ViewController: UITableViewDelegate {
 
             if let CTL = currentTintLevel {
                 destVC?.currentTintLevel = CTL
+            }
+            
+            if let DRVST = driveState {
+                destVC?.driveState = DRVST
             }
         }
         
