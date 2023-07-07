@@ -56,7 +56,6 @@ class ViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
       disconnectFromDevice()
       self.tableView.reloadData()
-      //startScanning()
     }
     
     func connectToDevice() -> Void {
@@ -146,6 +145,19 @@ class ViewController: UIViewController {
 
     })
   }
+    
+    @objc func parseSOTPerc(notification: Notification) -> Void{
+
+        var text = String(describing: notification.object)
+        text = text.replacingOccurrences(of: "Optional(<", with: "")
+        text = text.replacingOccurrences(of: ">)", with: "")
+
+        print(text)
+
+        let cur = Int(text, radix: 16)!
+        currentTintLevel = cur
+
+    }
 }
 
 // MARK: - CBCentralManagerDelegate
@@ -451,26 +463,18 @@ extension ViewController: UITableViewDelegate {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifySOTP"), object: nil)
+        
         if segue.identifier == "pairingToHome" {
             let destVC = segue.destination as? Home_Interface
 
             if let CTL = currentTintLevel {
                 destVC?.currentTintLevel = CTL
             }
+            
         }
     }
     
-    @objc func parseSOTPerc(notification: Notification) -> Void{
-
-        var text = String(describing: notification.object)
-        text = text.replacingOccurrences(of: "Optional(<", with: "")
-        text = text.replacingOccurrences(of: ">)", with: "")
-
-        print(text)
-
-        let cur = Int(text, radix: 16)!
-        currentTintLevel = cur
-
-    }
+    
     
 }

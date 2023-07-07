@@ -20,7 +20,7 @@ class Data_Interface: UIViewController {
     @IBOutlet weak var opticTransLabel: UILabel!
     @IBOutlet weak var alertsLabel: UILabel!
     @IBOutlet weak var coulombCountLabel: UILabel!
-    @IBOutlet weak var autoTintSwitch: UISwitch!
+    @IBOutlet weak var autoTintSwitch: UISwitch! //not used anywhere other than parse function right now
     
     var autoTintChar: String!
     var accelChar: String!
@@ -123,7 +123,7 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": ATSChar from parse method")
+        print("auto tint state was updated")
         
         autoTintChar = text
         
@@ -197,16 +197,32 @@ class Data_Interface: UIViewController {
     }
     
     
-    // MARK: - IB Action Funcs
+    // MARK: - IB Action Functionss
     
     @IBAction func autoTintStatus(_ sender: Any) {
         
-        var val: Int!
-        
-        if autoTintSwitch.isOn { val = 1 }
-        else if !autoTintSwitch.isOn { val = 0 }
-        
-        writeAutoTintState(value: &val)
+        Timer.scheduledTimer(withTimeInterval: 5, repeats: false) {_ in
+            switch BlePeripheral.connectedPeripheral!.state {
+            case .disconnected:
+                self.autoTintSwitch.isEnabled = false
+                self.performSegue(withIdentifier: "unwindToHomeDisconnection", sender: nil)
+            case .disconnecting:
+                self.autoTintSwitch.isEnabled = false
+                self.performSegue(withIdentifier: "unwindToHomeDisconnection", sender: nil)
+            case .connecting:
+                print("Still connecting")
+            case.connected:
+                var val: Int!
+                
+                if self.autoTintSwitch.isOn { val = 1 }
+                else if !self.autoTintSwitch.isOn { val = 0 }
+                
+                self.writeAutoTintState(value: &val)
+                
+            @unknown default:
+                print("Unknown error")
+            }
+        }
     }
     
     
@@ -214,6 +230,23 @@ class Data_Interface: UIViewController {
     
     @IBAction func backToHome(_ sender: Any) {
         performSegue(withIdentifier: "unwindToHome", sender: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+         
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyATS"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyTemp"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyHumidity"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyAL"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifySOTP"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyAccel"), object: nil)
+        
+        if segue.identifier == "unwindToHomeDisconnection" {
+            let destVC = segue.destination as? Home_Interface
+            
+            destVC?.deviceDisconnected = true
+            
+        }
     }
     
 }

@@ -33,6 +33,8 @@ class Home_Interface: UIViewController {
     var opticTrans: Float!
     var accelChar: String! = ""
     
+    var deviceDisconnected: Bool! = false //only for use for adequate handling of disconnection in Sensor Data Interface
+    
     
     //MARK: - ViewDidLoad
     
@@ -71,6 +73,10 @@ class Home_Interface: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.parseAccelChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAccel"), object: nil)
         
+        if deviceDisconnected {
+            disconnected()
+        }
+        
     }
     
     
@@ -100,25 +106,28 @@ class Home_Interface: UIViewController {
             tintValue.text = String(Int(round(slider.value))) + "% Tint"
             
         }
-        else {
-            
+        
+        if goalTintLevel != nil {
             tintProgress.progress = ( 1 - ((Float(abs(goalTintLevel - currentTintLevel)) / Float(tintProgressLength!))))
-
-            if(driveState == "02") {
-                statusText.text = "Bleaching: " + String(currentTintLevel) + "% Tint"
-                tintProgress.isHidden = false
-            }
-            else if(driveState == "01") {
-                statusText.text = "Tinting: " + String(currentTintLevel) + "% Tint"
-                tintProgress.isHidden = false
-            }
-            else if(driveState == "00") {
-                statusText.text = "Idle"
-                slider.value = Float(currentTintLevel)
-                tintValue.text = String(currentTintLevel) + "% Tint"
-                tintProgress.progress = 0
-                tintProgress.isHidden = true
-            }
+        }
+        else {
+            tintProgress.progress = 75
+        }
+        
+        if(driveState == "02") {
+            statusText.text = "Bleaching: " + String(currentTintLevel) + "% Tint"
+            tintProgress.isHidden = false
+        }
+        else if(driveState == "01") {
+            statusText.text = "Tinting: " + String(currentTintLevel) + "% Tint"
+            tintProgress.isHidden = false
+        }
+        else if(driveState == "00") {
+            statusText.text = "Idle"
+            slider.value = Float(currentTintLevel)
+            tintValue.text = String(currentTintLevel) + "% Tint"
+            tintProgress.progress = 0
+            tintProgress.isHidden = true
         }
         
     }
@@ -128,35 +137,40 @@ class Home_Interface: UIViewController {
     }
     
     @IBAction func valueOut(_ sender: Any) {
-    
-        switch BlePeripheral.connectedPeripheral!.state {
-        case .disconnected:
-            slider.isEnabled = false
-            sensorData.isEnabled = false
-            statusText.text = "Device disconnected. Please reconnect."
-        case .disconnecting:
-            slider.isEnabled = false
-            sensorData.isEnabled = false
-            statusText.text = "Device disconnected. Please reconnect."
-        case .connecting:
-            print("Still connecting")
-        case.connected:
-            var val = Int(round(slider.value))
-            let cur = Int(currentTintLevel)
-                    
-            if val != currentTintLevel {
+        
+        statusText.text = "Checking connection..."
+        slider.isEnabled = false
+        sensorData.isEnabled = false
+        tintProgress.isHidden = true
+        
+        Timer.scheduledTimer(withTimeInterval: 5, repeats: false) {_ in
+            switch BlePeripheral.connectedPeripheral!.state {
+            case .disconnected:
+                self.disconnected()
+            case .disconnecting:
+                self.disconnected()
+            case .connecting:
+                print("Still connecting")
+            case.connected:
+                self.slider.isEnabled = true
+                self.sensorData.isEnabled = true
+                
+                var val = Int(round(self.slider.value))
+                let cur = Int(self.currentTintLevel)
                         
-                tintProgress.progress = 0
-                tintProgress.isHidden = false
-                goalTintLevel = val
-                tintProgressLength = abs(goalTintLevel - cur)
-                        
-                statusText.text = "Working..."
-                        
-                writeOutgoingValue(value: &val)
+                if val != self.currentTintLevel {
+                            
+                    self.tintProgress.progress = 0
+                    self.tintProgress.isHidden = false
+                    self.statusText.text = "\u{2014}"
+                    self.goalTintLevel = val
+                    self.tintProgressLength = abs(self.goalTintLevel - cur)
+                            
+                    self.writeOutgoingValue(value: &val)
+                }
+            @unknown default:
+                print("Unknown error")
             }
-        @unknown default:
-            print("Unknown error")
         }
     }
     
@@ -164,13 +178,9 @@ class Home_Interface: UIViewController {
         
         switch BlePeripheral.connectedPeripheral!.state {
         case .disconnected:
-            slider.isEnabled = false
-            sensorData.isEnabled = false
-            statusText.text = "Device disconnected. Please reconnect."
+            disconnected()
         case .disconnecting:
-            slider.isEnabled = false
-            sensorData.isEnabled = false
-            statusText.text = "Device disconnected. Please reconnect."
+            disconnected()
         case .connecting:
             print("Still connecting")
         case.connected:
@@ -178,6 +188,7 @@ class Home_Interface: UIViewController {
         @unknown default:
             print("Unknown error")
         }
+        
     }
     
     
@@ -202,6 +213,12 @@ class Home_Interface: UIViewController {
         
     }
     
+    func disconnected() {
+        slider.isEnabled = false
+        sensorData.isEnabled = false
+        statusText.text = "Device disconnected. Please reconnect."
+    }
+    
     //MARK: - Parse Functions
     
     @objc func parseSOTPerc(notification: Notification) -> Void{
@@ -210,7 +227,7 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text)
+//        print(text)
         
         let cur = Int(text, radix: 16)!
         currentTintLevel = cur
@@ -228,6 +245,8 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: ">)", with: "")
         driveState = text
         
+        print("drive state was updated (home)")
+        
         update()
     }
     
@@ -236,7 +255,7 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": ATSChar from parse method")
+        print(text + ": ATSChar was updated (Home)")
         
         autoTintChar = text
     }
@@ -246,7 +265,7 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": temp from parse method")
+//        print(text + ": temp from parse method")
         
         let t = Int(text, radix: 16)!
         let value = Float(t)
@@ -258,7 +277,7 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": humidity from parse method")
+//        print(text + ": humidity from parse method")
         
         let t = Int(text, radix: 16)!
         let value = Float(t)
@@ -270,7 +289,7 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": amblight from parse method")
+//        print(text + ": amblight from parse method")
         
         separateAmbLightChar(rawChar: text)
     }
@@ -280,7 +299,7 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": accel from parse method")
+//        print(text + ": accel from parse method")
         
         accelChar = text
         
@@ -306,6 +325,15 @@ class Home_Interface: UIViewController {
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
          
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifySOTP"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyDrvSt"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyATS"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyTemp"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyHumidity"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyAL"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyAccel"), object: nil)
+        
+        
         if segue.identifier == "homeToData" {
             
             let destVC = segue.destination as? Data_Interface
@@ -328,8 +356,8 @@ class Home_Interface: UIViewController {
             destVC?.removeArrayData()
             destVC?.tableView.reloadData()
             destVC?.peripheralFoundLabel.text = "Peripherals Found: 0"
-            destVC?.scanningButton.setTitle("Scan", for: .normal)
-            destVC?.scanningButton.isEnabled = true
+            destVC?.startScanning()
         }
+        
     }
 }
