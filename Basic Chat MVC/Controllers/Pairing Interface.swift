@@ -154,6 +154,8 @@ class ViewController: UIViewController {
     })
   }
     
+    //MARK: - Parse Functions
+    
     @objc func parseSOTPerc(notification: Notification) -> Void{
 
         var text = String(describing: notification.object)

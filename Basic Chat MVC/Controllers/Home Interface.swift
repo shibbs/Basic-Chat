@@ -70,6 +70,10 @@ class Home_Interface: UIViewController {
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        addObservers()
+    }
+    
     
     // MARK: - Functions
     
@@ -340,6 +344,8 @@ class Home_Interface: UIViewController {
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
+        removeObservers()
+        
         if segue.identifier == "homeToData" {
             
             let destVC = segue.destination as? Data_Interface
@@ -356,8 +362,6 @@ class Home_Interface: UIViewController {
             
         }
         else if segue.identifier == "unwindToPairing" {
-            
-            removeObservers()
             
             let destVC = segue.destination as? ViewController
             
