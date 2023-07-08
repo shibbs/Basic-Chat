@@ -72,7 +72,7 @@ class ViewController: UIViewController {
     }
     
     func connectToDevice() -> Void {
-      
+
         stopScanning()
         centralManager?.connect(bluetoothPeripheral!, options: nil)
         scanningButton.setTitle("Connecting...", for: .normal)
@@ -110,7 +110,6 @@ class ViewController: UIViewController {
         scanningButton.setTitle("Scanning...", for: .normal)
         scanningButton.isEnabled = false
         centralManager?.scanForPeripherals(withServices: [])
-
 
         Timer.scheduledTimer(withTimeInterval: 5, repeats: false) {_ in
             self.stopScanning()
@@ -494,7 +493,6 @@ extension ViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-//      stopScanning()
         bluetoothPeripheral = peripheralArray[indexPath.row]
 
         BlePeripheral.connectedPeripheral = bluetoothPeripheral
@@ -523,6 +521,7 @@ extension ViewController: UITableViewDelegate {
 //            if let GT = goalTint {
 //                destVC?.goalTintLevel = GT
 //            }
+
         }
         
     }

@@ -11,6 +11,7 @@ import CoreBluetooth
 
 class Home_Interface: UIViewController {
     
+    
     //MARK: Outlets/Variables
     
     @IBOutlet weak var slider: UISlider!
@@ -40,7 +41,7 @@ class Home_Interface: UIViewController {
     
     
     //MARK: - ViewDidLoad
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -391,9 +392,8 @@ class Home_Interface: UIViewController {
     
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
+
         if segue.identifier == "homeToData" {
-            
             let destVC = segue.destination as? Data_Interface
             
             destVC?.autoTintChar = autoTintChar
@@ -417,6 +417,7 @@ class Home_Interface: UIViewController {
             destVC?.tableView.reloadData()
             destVC?.peripheralFoundLabel.text = "Tynt Devices Found: 0"
             destVC?.startScanning()
+
         }
         
     }
