@@ -26,6 +26,8 @@ class ViewController: UIViewController {
     
     var currentTintLevel: Int!
     var driveState: String!
+    var goalTint: Int!
+    
     var startUp: Bool!
     let defaults = UserDefaults.standard
 
@@ -59,11 +61,14 @@ class ViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.parseSOTPerc(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.parseDrvSt(notification:)), name: NSNotification.Name(rawValue: "NotifyDrvSt"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseGT(notification:)), name: NSNotification.Name(rawValue: "NotifyGT"), object: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifySOTP"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyDrvSt"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyGT"), object: nil)
     }
     
     func connectToDevice() -> Void {
@@ -178,6 +183,20 @@ class ViewController: UIViewController {
         
         print("drive state was updated (pairing)")
         
+    }
+    
+    @objc func parseGT(notification: Notification) -> Void {
+        
+        var text = String(describing: notification.object)
+        text = text.replacingOccurrences(of: "Optional(<", with: "")
+        text = text.replacingOccurrences(of: ">)", with: "")
+        
+        print(text)
+        
+        let GT = Int(text, radix: 16)!
+        goalTint = GT
+        
+        print(GT)
     }
 }
 
@@ -360,6 +379,9 @@ extension ViewController: CBPeripheralDelegate {
         else if characteristic.uuid.isEqual(CBUUIDs.cService_Characteristic_uuid_GoalTint){
             goalTintChar = characteristic
             BlePeripheral.goalTintChar = goalTintChar
+            //MARK: - reinclude when figured out GT Char parse needs
+//            peripheral.setNotifyValue(true, for: goalTintChar!)
+//            peripheral.readValue(for: characteristic)
             print("Goal Tint Characteristic: \(goalTintChar.uuid)")
         }
         
@@ -398,6 +420,10 @@ extension ViewController: CBPeripheralDelegate {
       else if char == accelChar {
           
           NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyAccel"), object: char.value! as Data)
+      }
+      else if char == goalTintChar {
+          
+          NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyGT"), object: char.value! as Data)
       }
 
   }
@@ -493,6 +519,10 @@ extension ViewController: UITableViewDelegate {
             
             if let DRVST = driveState {
                 destVC?.driveState = DRVST
+            }
+            
+            if let GT = goalTint {
+                destVC?.goalTintLevel = GT
             }
         }
         

@@ -88,13 +88,13 @@ class Data_Interface: UIViewController {
         let extTintBytes = bytes[2]
         
         let i = Float(Int(intLightBytes, radix: 16)!)
-        intLight = i / 10
+        intLight = i / 100
         
         let e = Float(Int(extLightBytes, radix: 16)!)
-        extLight = e / 10
+        extLight = e / 100
         
         let et = Float(Int(extTintBytes, radix: 16)!)
-        extTintedLight = et / 10
+        extTintedLight = et / 100
         
         let x = (et / e) * 1000
         opticTrans = (roundf(x) / 10.0)
@@ -171,13 +171,21 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": temp from parse method")
+        let chars = Array(text)
         
-        //MARK: - Handle Signed Bits Accordingly Below
+        let b1 = String(chars[0]) + String(chars[1])
+        let b2 = String(chars[2]) + String(chars[3])
         
-        let t = Int(text, radix: 16)!
-        let value = Float(t)
-        temp = value / 10
+        let a = Int(b1, radix: 16)!
+        let b = Int(b2, radix: 16)!
+        
+        let v = Float(a + (256*b))
+        temp = v / 10
+        
+        print(String(temp) + " : temp from sensor data")
+        
+        
+        //MARK: - Handle Signed Bits Accordingly
         
         update()
     }

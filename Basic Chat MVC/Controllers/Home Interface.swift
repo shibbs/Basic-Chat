@@ -20,8 +20,8 @@ class Home_Interface: UIViewController {
     @IBOutlet weak var tintValue: UILabel!
     @IBOutlet weak var tintProgress: UIProgressView!
     
-    private var goalTintLevel: Int!
-    private var tintProgressLength: Int!
+    var goalTintLevel: Int!
+    var tintProgressLength: Int!
     var currentTintLevel = -1
     
     var driveState: String! = ""
@@ -193,13 +193,13 @@ class Home_Interface: UIViewController {
         let extTintBytes = bytes[2]
         
         let i = Float(Int(intLightBytes, radix: 16)!)
-        intLight = i / 10
+        intLight = i / 100
         
         let e = Float(Int(extLightBytes, radix: 16)!)
-        extLight = e / 10
+        extLight = e / 100
         
         let et = Float(Int(extTintBytes, radix: 16)!)
-        extTintedLight = et / 10
+        extTintedLight = et / 100
         
         let x = (et / e) * 1000
         opticTrans = (roundf(x) / 10.0)
@@ -228,6 +228,8 @@ class Home_Interface: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.parseAmbLightChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAL"), object: nil)
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.parseAccelChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAccel"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseGT(notification:)), name: NSNotification.Name(rawValue: "NotifyGT"), object: nil)
     }
     
     func removeObservers() {
@@ -238,6 +240,7 @@ class Home_Interface: UIViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifySOTP"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyAccel"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyDrvSt"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyGT"), object: nil)
     }
     
     //MARK: - Parse Functions
@@ -286,11 +289,23 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + "from home")
+        let chars = Array(text)
         
-        let t = Int(text, radix: 16)!
-        let value = Float(t)
-        temp = value / 10
+        let b1 = String(chars[0]) + String(chars[1])
+        let b2 = String(chars[2]) + String(chars[3])
+        
+        let a = Int(b1, radix: 16)!
+        let b = Int(b2, radix: 16)!
+        
+        let v = Float(a + (256*b))
+        temp = v / 10
+        
+        print(String(temp) + " : temp from home")
+        
+        
+        //MARK: - Handle Signed Bits
+        
+        update()
     }
     
     @objc func parseHumidityChar(notification: Notification) -> Void {
@@ -298,7 +313,7 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + "from home")
+        print(text + " humidity from home")
         
         let t = Int(text, radix: 16)!
         let value = Float(t)
@@ -325,6 +340,20 @@ class Home_Interface: UIViewController {
         accelChar = text
         
         sensorData.isEnabled = true
+    }
+    
+    @objc func parseGT(notification: Notification) -> Void {
+        
+        var text = String(describing: notification.object)
+        text = text.replacingOccurrences(of: "Optional(<", with: "")
+        text = text.replacingOccurrences(of: ">)", with: "")
+        
+        print(text)
+        
+        let GT = Int(text, radix: 16)!
+        goalTintLevel = GT
+        
+        print(GT)
     }
     
         
