@@ -38,6 +38,8 @@ class Data_Interface: UIViewController {
     var coulombCt: Int!
     var driveState: String!
     
+    var timer = Timer()
+    
     
     //MARK: - ViewDidLoad
     
@@ -61,10 +63,32 @@ class Data_Interface: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         addObservers()
+        
+        self.timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true, block: { _ in
+            switch BlePeripheral.connectedPeripheral!.state {
+            case .disconnected:
+                self.autoTintSwitch.isEnabled = false
+                self.performSegue(withIdentifier: "unwindToHomeDisconnection", sender: nil)
+                
+            case .disconnecting:
+                self.autoTintSwitch.isEnabled = false
+                self.performSegue(withIdentifier: "unwindToHomeDisconnection", sender: nil)
+                
+            case .connecting:
+                print("Still connecting")
+                
+            case.connected:
+                self.update()
+                
+            @unknown default:
+                print("Unknown error")
+            }
+        })
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         removeObservers()
+        timer.invalidate()
     }
     
     // MARK: - Functions
@@ -121,7 +145,9 @@ class Data_Interface: UIViewController {
         if driveState == "00" { driveStateLabel.text = "Idle" }
         else if driveState == "01" { driveStateLabel.text = "Tinting" }
         else if driveState == "02" { driveStateLabel.text = "Bleaching" }
+        else if driveState == "03" { driveStateLabel.text = "Working" }
         
+        print("updated (data interface)")
     }
     
     func addObservers() {
@@ -162,7 +188,7 @@ class Data_Interface: UIViewController {
         
         autoTintChar = text
         
-        update()
+//        update()
         
     }
     
@@ -187,7 +213,7 @@ class Data_Interface: UIViewController {
         
         //MARK: - Handle Signed Bits Accordingly
         
-        update()
+//        update()
     }
     
     @objc func parseHumidityChar(notification: Notification) -> Void {
@@ -201,7 +227,7 @@ class Data_Interface: UIViewController {
         let value = Float(t)
         humidity = value
         
-        update()
+//        update()
     }
     
     @objc func parseAmbLightChar(notification: Notification) -> Void {
@@ -213,7 +239,7 @@ class Data_Interface: UIViewController {
         
         separateAmbLightChar(rawChar: text)
         
-        update()
+//        update()
     }
     
     @objc func parseCoulombCtChar(notification: Notification) -> Void{
@@ -227,7 +253,7 @@ class Data_Interface: UIViewController {
         let t = Int(text, radix: 16)!
         coulombCt = t
         
-        update()
+//        update()
     }
     
     @objc func parseAccelChar(notification: Notification) -> Void {
@@ -239,7 +265,7 @@ class Data_Interface: UIViewController {
         
         accelChar = text
         
-        update()
+//        update()
     }
     
     @objc func parseDrvSt(notification: Notification) -> Void {
@@ -249,7 +275,7 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: ">)", with: "")
         driveState = text
         
-        update()
+//        update()
     }
     
     
@@ -257,27 +283,25 @@ class Data_Interface: UIViewController {
     
     @IBAction func autoTintStatus(_ sender: Any) {
         
-        Timer.scheduledTimer(withTimeInterval: 5, repeats: false) {_ in
-            switch BlePeripheral.connectedPeripheral!.state {
-            case .disconnected:
-                self.autoTintSwitch.isEnabled = false
-                self.performSegue(withIdentifier: "unwindToHomeDisconnection", sender: nil)
-            case .disconnecting:
-                self.autoTintSwitch.isEnabled = false
-                self.performSegue(withIdentifier: "unwindToHomeDisconnection", sender: nil)
-            case .connecting:
-                print("Still connecting")
-            case.connected:
-                var val: Int!
-                
-                if self.autoTintSwitch.isOn { val = 1 }
-                else if !self.autoTintSwitch.isOn { val = 0 }
-                
-                self.writeAutoTintState(value: &val)
-                
-            @unknown default:
-                print("Unknown error")
-            }
+        switch BlePeripheral.connectedPeripheral!.state {
+        case .disconnected:
+            self.autoTintSwitch.isEnabled = false
+            self.performSegue(withIdentifier: "unwindToHomeDisconnection", sender: nil)
+        case .disconnecting:
+            self.autoTintSwitch.isEnabled = false
+            self.performSegue(withIdentifier: "unwindToHomeDisconnection", sender: nil)
+        case .connecting:
+            print("Still connecting")
+        case.connected:
+            var val: Int!
+            
+            if self.autoTintSwitch.isOn { val = 1 }
+            else if !self.autoTintSwitch.isOn { val = 0 }
+            
+            self.writeAutoTintState(value: &val)
+            
+        @unknown default:
+            print("Unknown error")
         }
     }
     

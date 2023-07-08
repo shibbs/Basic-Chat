@@ -36,6 +36,8 @@ class Home_Interface: UIViewController {
     
     var deviceDisconnected: Bool! = false //only for use for adequate handling of disconnection in Sensor Data Interface
     
+    var timer = Timer()
+    
     
     //MARK: - ViewDidLoad
     
@@ -57,16 +59,29 @@ class Home_Interface: UIViewController {
         tintProgress.progress = 0
         tintProgress.isHidden = true
         
+        update()
+        
         if deviceDisconnected {
             disconnected()
         }
         
-//        Timer.scheduledTimer(withTimeInterval: 2, repeats: false) {_ in
-//            self.update()
-//        }
-        
-        update()
-        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        self.timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true, block: { _ in
+            switch BlePeripheral.connectedPeripheral!.state {
+            case .disconnected:
+                self.disconnected()
+            case .disconnecting:
+                self.disconnected()
+            case .connecting:
+                print("Still connecting")
+            case.connected:
+                self.update()
+            @unknown default:
+                print("Unknown error")
+            }
+        })
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -75,6 +90,7 @@ class Home_Interface: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         removeObservers()
+        timer.invalidate()
     }
     
     
@@ -101,26 +117,32 @@ class Home_Interface: UIViewController {
             tintProgress.progress = ( 1 - ((Float(abs(goalTintLevel - currentTintLevel)) / Float(tintProgressLength!))))
         }
         else if goalTintLevel == nil {
-            tintProgress.progress = 75
+            tintProgress.progress = 0
             slider.value = Float(currentTintLevel)
             tintValue.text = String(Int(round(slider.value))) + "% Tint"
         }
         
-        if(driveState == "02") {
+        if driveState == "02" {
             statusText.text = "Bleaching: " + String(currentTintLevel) + "% Tint"
             tintProgress.isHidden = false
         }
-        else if(driveState == "01") {
+        else if driveState == "01" {
             statusText.text = "Tinting: " + String(currentTintLevel) + "% Tint"
             tintProgress.isHidden = false
         }
-        else if(driveState == "00") {
+        else if driveState == "00" {
             statusText.text = "Idle"
             slider.value = Float(currentTintLevel)
             tintValue.text = String(currentTintLevel) + "% Tint"
             tintProgress.progress = 0
             tintProgress.isHidden = true
         }
+        else if driveState == "03" {
+            statusText.text = "Working..."
+            tintProgress.isHidden = true
+        }
+        
+        print("updated (home interface)")
         
     }
     
@@ -130,41 +152,32 @@ class Home_Interface: UIViewController {
     
     @IBAction func valueOut(_ sender: Any) {
         
-        statusText.text = "Checking connection..."
-        slider.isEnabled = false
-        sensorData.isEnabled = false
-        pairing.isEnabled = false
-        tintProgress.isHidden = true
-        
-        Timer.scheduledTimer(withTimeInterval: 5, repeats: false) {_ in
-            switch BlePeripheral.connectedPeripheral!.state {
-            case .disconnected:
-                self.disconnected()
-            case .disconnecting:
-                self.disconnected()
-            case .connecting:
-                print("Still connecting")
-            case.connected:
-                self.slider.isEnabled = true
-                self.sensorData.isEnabled = true
-                self.pairing.isEnabled = true
-                
-                var val = Int(round(self.slider.value))
-                let cur = Int(self.currentTintLevel)
+        switch BlePeripheral.connectedPeripheral!.state {
+        case .disconnected:
+            self.disconnected()
+        case .disconnecting:
+            self.disconnected()
+        case .connecting:
+            print("Still connecting")
+        case.connected:
+            self.slider.isEnabled = true
+            self.sensorData.isEnabled = true
+            self.pairing.isEnabled = true
+            
+            var val = Int(round(self.slider.value))
+            let cur = Int(self.currentTintLevel)
+                    
+            if val != self.currentTintLevel {
                         
-                if val != self.currentTintLevel {
-                            
-                    self.tintProgress.progress = 0
-                    self.tintProgress.isHidden = false
-                    self.statusText.text = "Connected"
-                    self.goalTintLevel = val
-                    self.tintProgressLength = abs(self.goalTintLevel - cur)
-                            
-                    self.writeOutgoingValue(value: &val)
-                }
-            @unknown default:
-                print("Unknown error")
+                self.tintProgress.progress = 0
+                self.driveState = "03"
+                self.goalTintLevel = val
+                self.tintProgressLength = abs(self.goalTintLevel - cur)
+                        
+                self.writeOutgoingValue(value: &val)
             }
+        @unknown default:
+            print("Unknown error")
         }
     
     }
@@ -213,7 +226,11 @@ class Home_Interface: UIViewController {
         slider.isEnabled = false
         sensorData.isEnabled = false
         pairing.isEnabled = true
+        tintProgress.isHidden = true
+        tintValue.text = "\u{2014}% Tint"
+        slider.value = 0
         statusText.text = "Device disconnected. Please reconnect."
+        timer.invalidate()
     }
     
     func addObservers() {
@@ -261,7 +278,7 @@ class Home_Interface: UIViewController {
         
         slider.isEnabled = true
         
-        update()
+//        update()
         
     }
     
@@ -274,7 +291,7 @@ class Home_Interface: UIViewController {
         
         print("drive state was updated (home)")
         
-        update()
+//        update()
     }
     
     @objc func parseATSChar(notification: Notification) -> Void {
