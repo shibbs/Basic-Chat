@@ -188,8 +188,6 @@ class Data_Interface: UIViewController {
         
         autoTintChar = text
         
-//        update()
-        
     }
     
     @objc func parseTempChar(notification: Notification) -> Void {
@@ -208,12 +206,11 @@ class Data_Interface: UIViewController {
         let v = Float(a + (256*b))
         temp = v / 10
         
-        print(String(temp) + " : temp from sensor data")
+        print(String(temp) + " : tempChar from sensor data")
         
         
         //MARK: - Handle Signed Bits Accordingly
         
-//        update()
     }
     
     @objc func parseHumidityChar(notification: Notification) -> Void {
@@ -221,7 +218,7 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": humidity from parse method")
+        print(text + " : humidityChar from sensor data")
         
         let t = Int(text, radix: 16)!
         let value = Float(t)
@@ -235,11 +232,10 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": amblight from parse method")
+        print(text + " : ambLightChar from sensor data")
         
         separateAmbLightChar(rawChar: text)
         
-//        update()
     }
     
     @objc func parseCoulombCtChar(notification: Notification) -> Void{
@@ -248,12 +244,11 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text)
+        print(text + " : coulombCtChar from sensor data")
         
         let t = Int(text, radix: 16)!
         coulombCt = t
         
-//        update()
     }
     
     @objc func parseAccelChar(notification: Notification) -> Void {
@@ -261,11 +256,10 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": accel from parse method")
+        print(text + " : accelChar from sensor data")
         
         accelChar = text
         
-//        update()
     }
     
     @objc func parseDrvSt(notification: Notification) -> Void {
@@ -273,9 +267,11 @@ class Data_Interface: UIViewController {
         var text = String(describing: notification.object)
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
+        
+        print(text + " : drvStChar from sensor data")
+        
         driveState = text
         
-//        update()
     }
     
     

@@ -271,14 +271,12 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + "from home")
+        print(text + " : SOT from home")
         
         let cur = Int(text, radix: 16)!
         currentTintLevel = cur
         
         slider.isEnabled = true
-        
-//        update()
         
     }
     
@@ -287,11 +285,11 @@ class Home_Interface: UIViewController {
         var text = String(describing: notification.object)
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
+        
+        print(text + " : drvStChar from home")
+        
         driveState = text
         
-        print("drive state was updated (home)")
-        
-//        update()
     }
     
     @objc func parseATSChar(notification: Notification) -> Void {
@@ -299,7 +297,7 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": ATSChar was updated (Home)")
+        print(text + ": ATSChar from home")
         
         autoTintChar = text
     }
@@ -320,7 +318,7 @@ class Home_Interface: UIViewController {
         let v = Float(a + (256*b))
         temp = v / 10
         
-        print(String(temp) + " : temp from home")
+        print(String(temp) + " : tempChar from home")
         
         
         //MARK: - Handle Signed Bits
@@ -332,7 +330,7 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + " humidity from home")
+        print(text + " : humidityChar from home")
         
         let t = Int(text, radix: 16)!
         let value = Float(t)
@@ -344,7 +342,7 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + "from home")
+        print(text + " : ambLightChar from home")
         
         separateAmbLightChar(rawChar: text)
     }
@@ -354,7 +352,7 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + "from home")
+        print(text + " : accelChar from home")
         
         accelChar = text
         

@@ -261,7 +261,6 @@ extension ViewController: CBCentralManagerDelegate {
             }
         }
         
-      print("Peripheral found");
         let p_name = peripheral.name ?? ""; //get the name and cast to null if empty
       if peripheralArray.contains(peripheral) {
           print("Duplicate Found.")
