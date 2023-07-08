@@ -35,7 +35,7 @@ class Data_Interface: UIViewController {
     var extLight: Float!
     var extTintedLight: Float!
     var opticTrans: Float!
-    var coulombCt: Float!
+    var coulombCt: Int!
     var driveState: String!
     
     
@@ -225,8 +225,7 @@ class Data_Interface: UIViewController {
         print(text)
         
         let t = Int(text, radix: 16)!
-        let v = Float(t)
-        coulombCt = v
+        coulombCt = t
         
         update()
     }
@@ -296,6 +295,12 @@ class Data_Interface: UIViewController {
             
             destVC?.deviceDisconnected = true
             
+        }
+        else if segue.identifier == "unwindToHome" {
+            let destVC = segue.destination as? Home_Interface
+            
+            destVC?.currentTintLevel = coulombCt
+            destVC?.update()
         }
         
     }
