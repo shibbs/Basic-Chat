@@ -12,15 +12,18 @@ class Data_Interface: UIViewController {
     
     // MARK: - Outlets/Variables
     
+    @IBOutlet weak var homeButton: UIButton!
+    
     @IBOutlet weak var tempLabel: UILabel!
     @IBOutlet weak var humidityLabel: UILabel!
     @IBOutlet weak var intLightLabel: UILabel!
     @IBOutlet weak var extLightLabel: UILabel!
-    @IBOutlet weak var homeButton: UIButton!
+    @IBOutlet weak var extTintedLightLabel: UILabel!
     @IBOutlet weak var opticTransLabel: UILabel!
     @IBOutlet weak var alertsLabel: UILabel!
     @IBOutlet weak var coulombCountLabel: UILabel!
-    @IBOutlet weak var autoTintSwitch: UISwitch!
+    @IBOutlet weak var driveStateLabel: UILabel!
+    @IBOutlet weak var autoTintSwitch: UISwitch! //not used anywhere other than parse function right now
     
     var autoTintChar: String!
     var accelChar: String!
@@ -30,8 +33,12 @@ class Data_Interface: UIViewController {
     var humidity: Float!
     var intLight: Float!
     var extLight: Float!
+    var extTintedLight: Float!
     var opticTrans: Float!
-    var coulombCt: Float!
+    var coulombCt: Int!
+    var driveState: String!
+    
+    var timer = Timer()
     
     
     //MARK: - ViewDidLoad
@@ -39,29 +46,49 @@ class Data_Interface: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.parseATSChar(notification:)), name: NSNotification.Name(rawValue: "NotifyATS"), object: nil)
-//        
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.parseTempChar(notification:)), name: NSNotification.Name(rawValue: "NotifyTemp"), object: nil)
-//        
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.parseHumidityChar(notification:)), name: NSNotification.Name(rawValue: "NotifyHumidity"), object: nil)
-//        
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.parseAmbLightChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAL"), object: nil)
-//        
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.parseCoulombCtChar(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
-//        
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.parseAccelChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAccel"), object: nil)
-        
         homeButton.setTitle("", for: .normal)
         
         tempLabel.text = "\u{2014}" + "\u{00B0}" + " Celsius"
         humidityLabel.text = "\u{2014}%"
         intLightLabel.text = "\u{2014} Lumens"
         extLightLabel.text = "\u{2014} Lumens"
+        extTintedLightLabel.text = "\u{2014} Lumens"
         opticTransLabel.text = "\u{2014}%"
         alertsLabel.text = "\u{2014}"
         coulombCountLabel.text = "\u{2014}%"
+        driveStateLabel.text = "\u{2014}"
         
         update()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        addObservers()
+        
+        self.timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true, block: { _ in
+            switch BlePeripheral.connectedPeripheral!.state {
+            case .disconnected:
+                self.autoTintSwitch.isEnabled = false
+                self.performSegue(withIdentifier: "unwindToHomeDisconnection", sender: nil)
+                
+            case .disconnecting:
+                self.autoTintSwitch.isEnabled = false
+                self.performSegue(withIdentifier: "unwindToHomeDisconnection", sender: nil)
+                
+            case .connecting:
+                print("Still connecting")
+                
+            case.connected:
+                self.update()
+                
+            @unknown default:
+                print("Unknown error")
+            }
+        })
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        removeObservers()
+        timer.invalidate()
     }
     
     // MARK: - Functions
@@ -85,12 +112,13 @@ class Data_Interface: UIViewController {
         let extTintBytes = bytes[2]
         
         let i = Float(Int(intLightBytes, radix: 16)!)
-        intLight = i / 10
+        intLight = i / 100
         
         let e = Float(Int(extLightBytes, radix: 16)!)
-        extLight = e / 10
+        extLight = e / 100
         
         let et = Float(Int(extTintBytes, radix: 16)!)
+        extTintedLight = et / 100
         
         let x = (et / e) * 1000
         opticTrans = (roundf(x) / 10.0)
@@ -106,6 +134,7 @@ class Data_Interface: UIViewController {
         humidityLabel.text = String(Int(humidity)) + "%"
         intLightLabel.text = String(intLight) + " Lumens"
         extLightLabel.text = String(extLight) + " Lumens"
+        extTintedLightLabel.text = String(extTintedLight) + " Lumens"
         opticTransLabel.text = String(opticTrans) + "%"
         coulombCountLabel.text = String(Int(coulombCt)) + "%"
         
@@ -113,6 +142,38 @@ class Data_Interface: UIViewController {
         else if accelChar == "01" { alertsLabel.text = "Bang/Smash Detected" }
         else if accelChar == "02" { alertsLabel.text = "Rain Detected" }
         
+        if driveState == "00" { driveStateLabel.text = "Idle" }
+        else if driveState == "01" { driveStateLabel.text = "Tinting" }
+        else if driveState == "02" { driveStateLabel.text = "Bleaching" }
+        else if driveState == "03" { driveStateLabel.text = "Working" }
+        
+        print("updated (data interface)")
+    }
+    
+    func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseATSChar(notification:)), name: NSNotification.Name(rawValue: "NotifyATS"), object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseTempChar(notification:)), name: NSNotification.Name(rawValue: "NotifyTemp"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseHumidityChar(notification:)), name: NSNotification.Name(rawValue: "NotifyHumidity"), object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseAmbLightChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAL"), object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseCoulombCtChar(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseAccelChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAccel"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseDrvSt(notification:)), name: NSNotification.Name(rawValue: "NotifyDrvSt"), object: nil)
+    }
+    
+    func removeObservers() {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyATS"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyTemp"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyHumidity"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyAL"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifySOTP"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyAccel"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyDrvSt"), object: nil)
     }
     
     
@@ -123,9 +184,10 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": ATSChar from parse method")
-        
         autoTintChar = text
+        
+        print("auto tint state was updated")
+        
     }
     
     @objc func parseTempChar(notification: Notification) -> Void {
@@ -133,15 +195,22 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": temp from parse method 2")
+        let chars = Array(text)
         
-        //MARK: - Handle Signed Bits Accordingly Below
+        let b1 = String(chars[0]) + String(chars[1])
+        let b2 = String(chars[2]) + String(chars[3])
         
-        let t = Int(text, radix: 16)!
-        let value = Float(t)
-        temp = value / 10
+        let a = Int(b1, radix: 16)!
+        let b = Int(b2, radix: 16)!
         
-        update()
+        let v = Float(a + (256*b))
+        temp = v / 10
+        
+        print(String(temp) + " : tempChar from sensor data")
+        
+        
+        //MARK: - Handle Signed Bits Accordingly
+        
     }
     
     @objc func parseHumidityChar(notification: Notification) -> Void {
@@ -149,13 +218,12 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": humidity from parse method")
-        
         let t = Int(text, radix: 16)!
         let value = Float(t)
         humidity = value
         
-        update()
+        print(text + " : humidityChar from sensor data")
+        
     }
     
     @objc func parseAmbLightChar(notification: Notification) -> Void {
@@ -163,11 +231,10 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": amblight from parse method 2")
-        
         separateAmbLightChar(rawChar: text)
         
-        update()
+        print(text + " : ambLightChar from sensor data")
+        
     }
     
     @objc func parseCoulombCtChar(notification: Notification) -> Void{
@@ -176,13 +243,11 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text)
-        
         let t = Int(text, radix: 16)!
-        let v = Float(t)
-        coulombCt = v
+        coulombCt = t
         
-        update()
+        print(text + " : coulombCtChar from sensor data")
+        
     }
     
     @objc func parseAccelChar(notification: Notification) -> Void {
@@ -190,24 +255,49 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + ": accel from parse method")
-        
         accelChar = text
         
-        update()
+        print(text + " : accelChar from sensor data")
+        
+    }
+    
+    @objc func parseDrvSt(notification: Notification) -> Void {
+        
+        var text = String(describing: notification.object)
+        text = text.replacingOccurrences(of: "Optional(<", with: "")
+        text = text.replacingOccurrences(of: ">)", with: "")
+        
+        driveState = text
+        
+        print(text + " : drvStChar from sensor data")
+        
     }
     
     
-    // MARK: - IB Action Funcs
+    // MARK: - IB Action Functionss
     
     @IBAction func autoTintStatus(_ sender: Any) {
         
-        var val: Int!
-        
-        if autoTintSwitch.isOn { val = 1 }
-        else if !autoTintSwitch.isOn { val = 0 }
-        
-        writeAutoTintState(value: &val)
+        switch BlePeripheral.connectedPeripheral!.state {
+        case .disconnected:
+            self.autoTintSwitch.isEnabled = false
+            self.performSegue(withIdentifier: "unwindToHomeDisconnection", sender: nil)
+        case .disconnecting:
+            self.autoTintSwitch.isEnabled = false
+            self.performSegue(withIdentifier: "unwindToHomeDisconnection", sender: nil)
+        case .connecting:
+            print("Still connecting")
+        case.connected:
+            var val: Int!
+            
+            if self.autoTintSwitch.isOn { val = 1 ; autoTintChar = "01" }
+            else if !self.autoTintSwitch.isOn { val = 0 ; autoTintChar = "00"}
+            
+            self.writeAutoTintState(value: &val)
+            
+        @unknown default:
+            print("Unknown error")
+        }
     }
     
     
@@ -215,6 +305,24 @@ class Data_Interface: UIViewController {
     
     @IBAction func backToHome(_ sender: Any) {
         performSegue(withIdentifier: "unwindToHome", sender: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "unwindToHomeDisconnection" {
+            let destVC = segue.destination as? Home_Interface
+            
+            destVC?.deviceDisconnected = true
+            
+        }
+        else if segue.identifier == "unwindToHome" {
+            let destVC = segue.destination as? Home_Interface
+            
+            destVC?.currentTintLevel = coulombCt
+            destVC?.autoTintChar = autoTintChar
+            destVC?.update()
+        }
+        
     }
     
 }
