@@ -184,9 +184,9 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print("auto tint state was updated")
-        
         autoTintChar = text
+        
+        print("auto tint state was updated")
         
     }
     
@@ -218,13 +218,12 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + " : humidityChar from sensor data")
-        
         let t = Int(text, radix: 16)!
         let value = Float(t)
         humidity = value
         
-//        update()
+        print(text + " : humidityChar from sensor data")
+        
     }
     
     @objc func parseAmbLightChar(notification: Notification) -> Void {
@@ -232,9 +231,9 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + " : ambLightChar from sensor data")
-        
         separateAmbLightChar(rawChar: text)
+        
+        print(text + " : ambLightChar from sensor data")
         
     }
     
@@ -244,10 +243,10 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + " : coulombCtChar from sensor data")
-        
         let t = Int(text, radix: 16)!
         coulombCt = t
+        
+        print(text + " : coulombCtChar from sensor data")
         
     }
     
@@ -256,9 +255,9 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + " : accelChar from sensor data")
-        
         accelChar = text
+        
+        print(text + " : accelChar from sensor data")
         
     }
     
@@ -268,9 +267,9 @@ class Data_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
-        print(text + " : drvStChar from sensor data")
-        
         driveState = text
+        
+        print(text + " : drvStChar from sensor data")
         
     }
     
@@ -291,8 +290,8 @@ class Data_Interface: UIViewController {
         case.connected:
             var val: Int!
             
-            if self.autoTintSwitch.isOn { val = 1 }
-            else if !self.autoTintSwitch.isOn { val = 0 }
+            if self.autoTintSwitch.isOn { val = 1 ; autoTintChar = "01" }
+            else if !self.autoTintSwitch.isOn { val = 0 ; autoTintChar = "00"}
             
             self.writeAutoTintState(value: &val)
             
@@ -320,6 +319,7 @@ class Data_Interface: UIViewController {
             let destVC = segue.destination as? Home_Interface
             
             destVC?.currentTintLevel = coulombCt
+            destVC?.autoTintChar = autoTintChar
             destVC?.update()
         }
         
