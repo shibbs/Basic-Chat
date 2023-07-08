@@ -30,6 +30,7 @@ class Home_Interface: UIViewController {
     var humidity: Float!
     var intLight: Float!
     var extLight: Float!
+    var extTintedLight: Float!
     var opticTrans: Float!
     var accelChar: String! = ""
     
@@ -198,6 +199,7 @@ class Home_Interface: UIViewController {
         extLight = e / 10
         
         let et = Float(Int(extTintBytes, radix: 16)!)
+        extTintedLight = et / 10
         
         let x = (et / e) * 1000
         opticTrans = (roundf(x) / 10.0)
@@ -355,6 +357,7 @@ class Home_Interface: UIViewController {
             destVC?.humidity = humidity
             destVC?.intLight = intLight
             destVC?.extLight = extLight
+            destVC?.extTintedLight = extTintedLight
             destVC?.opticTrans = opticTrans
             destVC?.accelChar = accelChar
             destVC?.coulombCt = Float(currentTintLevel)
@@ -368,7 +371,7 @@ class Home_Interface: UIViewController {
             destVC?.startUp = false
             destVC?.removeArrayData()
             destVC?.tableView.reloadData()
-            destVC?.peripheralFoundLabel.text = "Peripherals Found: 0"
+            destVC?.peripheralFoundLabel.text = "Tynt Devices Found: 0"
             destVC?.startScanning()
         }
         

@@ -12,11 +12,13 @@ class Data_Interface: UIViewController {
     
     // MARK: - Outlets/Variables
     
+    @IBOutlet weak var homeButton: UIButton!
+    
     @IBOutlet weak var tempLabel: UILabel!
     @IBOutlet weak var humidityLabel: UILabel!
     @IBOutlet weak var intLightLabel: UILabel!
     @IBOutlet weak var extLightLabel: UILabel!
-    @IBOutlet weak var homeButton: UIButton!
+    @IBOutlet weak var extTintedLightLabel: UILabel!
     @IBOutlet weak var opticTransLabel: UILabel!
     @IBOutlet weak var alertsLabel: UILabel!
     @IBOutlet weak var coulombCountLabel: UILabel!
@@ -31,6 +33,7 @@ class Data_Interface: UIViewController {
     var humidity: Float!
     var intLight: Float!
     var extLight: Float!
+    var extTintedLight: Float!
     var opticTrans: Float!
     var coulombCt: Float!
     var driveState: String!
@@ -47,6 +50,7 @@ class Data_Interface: UIViewController {
         humidityLabel.text = "\u{2014}%"
         intLightLabel.text = "\u{2014} Lumens"
         extLightLabel.text = "\u{2014} Lumens"
+        extTintedLightLabel.text = "\u{2014} Lumens"
         opticTransLabel.text = "\u{2014}%"
         alertsLabel.text = "\u{2014}"
         coulombCountLabel.text = "\u{2014}%"
@@ -90,6 +94,7 @@ class Data_Interface: UIViewController {
         extLight = e / 10
         
         let et = Float(Int(extTintBytes, radix: 16)!)
+        extTintedLight = et / 10
         
         let x = (et / e) * 1000
         opticTrans = (roundf(x) / 10.0)
@@ -105,6 +110,7 @@ class Data_Interface: UIViewController {
         humidityLabel.text = String(Int(humidity)) + "%"
         intLightLabel.text = String(intLight) + " Lumens"
         extLightLabel.text = String(extLight) + " Lumens"
+        extTintedLightLabel.text = String(extTintedLight) + " Lumens"
         opticTransLabel.text = String(opticTrans) + "%"
         coulombCountLabel.text = String(Int(coulombCt)) + "%"
         
