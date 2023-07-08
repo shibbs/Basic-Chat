@@ -26,7 +26,7 @@ class ViewController: UIViewController {
     
     var currentTintLevel: Int!
     var driveState: String!
-    var goalTint: Int!
+//    var goalTint: Int!
     
     var startUp: Bool!
     let defaults = UserDefaults.standard
@@ -62,13 +62,13 @@ class ViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.parseDrvSt(notification:)), name: NSNotification.Name(rawValue: "NotifyDrvSt"), object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.parseGT(notification:)), name: NSNotification.Name(rawValue: "NotifyGT"), object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.parseGT(notification:)), name: NSNotification.Name(rawValue: "NotifyGT"), object: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifySOTP"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyDrvSt"), object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyGT"), object: nil)
+//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyGT"), object: nil)
     }
     
     func connectToDevice() -> Void {
@@ -185,19 +185,19 @@ class ViewController: UIViewController {
         
     }
     
-    @objc func parseGT(notification: Notification) -> Void {
-        
-        var text = String(describing: notification.object)
-        text = text.replacingOccurrences(of: "Optional(<", with: "")
-        text = text.replacingOccurrences(of: ">)", with: "")
-        
-        print(text)
-        
-        let GT = Int(text, radix: 16)!
-        goalTint = GT
-        
-        print(GT)
-    }
+//    @objc func parseGT(notification: Notification) -> Void {
+//
+//        var text = String(describing: notification.object)
+//        text = text.replacingOccurrences(of: "Optional(<", with: "")
+//        text = text.replacingOccurrences(of: ">)", with: "")
+//
+//        print(text)
+//
+//        let GT = Int(text, radix: 16)!
+//        goalTint = GT
+//
+//        print(GT)
+//    }
 }
 
 // MARK: - CBCentralManagerDelegate
@@ -421,10 +421,10 @@ extension ViewController: CBPeripheralDelegate {
           
           NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyAccel"), object: char.value! as Data)
       }
-      else if char == goalTintChar {
-          
-          NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyGT"), object: char.value! as Data)
-      }
+//      else if char == goalTintChar {
+//
+//          NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyGT"), object: char.value! as Data)
+//      }
 
   }
 
@@ -521,9 +521,9 @@ extension ViewController: UITableViewDelegate {
                 destVC?.driveState = DRVST
             }
             
-            if let GT = goalTint {
-                destVC?.goalTintLevel = GT
-            }
+//            if let GT = goalTint {
+//                destVC?.goalTintLevel = GT
+//            }
         }
         
     }

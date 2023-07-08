@@ -164,6 +164,7 @@ class Home_Interface: UIViewController {
                 print("Unknown error")
             }
         }
+    
     }
     
     @IBAction func sensorDataPressed(_ sender: Any) {
@@ -229,7 +230,7 @@ class Home_Interface: UIViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.parseAccelChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAccel"), object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.parseGT(notification:)), name: NSNotification.Name(rawValue: "NotifyGT"), object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.parseGT(notification:)), name: NSNotification.Name(rawValue: "NotifyGT"), object: nil)
     }
     
     func removeObservers() {
@@ -240,7 +241,7 @@ class Home_Interface: UIViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifySOTP"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyAccel"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyDrvSt"), object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyGT"), object: nil)
+//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyGT"), object: nil)
     }
     
     //MARK: - Parse Functions
@@ -305,7 +306,6 @@ class Home_Interface: UIViewController {
         
         //MARK: - Handle Signed Bits
         
-        update()
     }
     
     @objc func parseHumidityChar(notification: Notification) -> Void {
@@ -342,19 +342,19 @@ class Home_Interface: UIViewController {
         sensorData.isEnabled = true
     }
     
-    @objc func parseGT(notification: Notification) -> Void {
-        
-        var text = String(describing: notification.object)
-        text = text.replacingOccurrences(of: "Optional(<", with: "")
-        text = text.replacingOccurrences(of: ">)", with: "")
-        
-        print(text)
-        
-        let GT = Int(text, radix: 16)!
-        goalTintLevel = GT
-        
-        print(GT)
-    }
+//    @objc func parseGT(notification: Notification) -> Void {
+//
+//        var text = String(describing: notification.object)
+//        text = text.replacingOccurrences(of: "Optional(<", with: "")
+//        text = text.replacingOccurrences(of: ">)", with: "")
+//
+//        print(text)
+//
+//        let GT = Int(text, radix: 16)!
+//        goalTintLevel = GT
+//
+//        print(GT)
+//    }
     
         
     
