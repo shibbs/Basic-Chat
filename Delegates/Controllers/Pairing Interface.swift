@@ -23,7 +23,12 @@ class ViewController: UIViewController {
     private var humidityChar: CBCharacteristic!
     private var ambLightChar: CBCharacteristic!
     private var accelChar: CBCharacteristic!
+    
     var currentTintLevel: Int!
+    var driveState: String!
+//    var goalTint: Int!
+    
+    var startUp: Bool!
     let defaults = UserDefaults.standard
 
     // UI
@@ -34,7 +39,8 @@ class ViewController: UIViewController {
     
     
     @IBAction func scanningAction(_ sender: Any) {
-    startScanning()
+        startUp = false
+        startScanning()
   }
 
     override func viewDidLoad() {
@@ -46,21 +52,33 @@ class ViewController: UIViewController {
       // Manager
       centralManager = CBCentralManager(delegate: self, queue: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.parseSOTPerc(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
     }
 
     override func viewDidAppear(_ animated: Bool) {
       disconnectFromDevice()
       self.tableView.reloadData()
-      //startScanning()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseSOTPerc(notification:)), name: NSNotification.Name(rawValue: "NotifySOTP"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseDrvSt(notification:)), name: NSNotification.Name(rawValue: "NotifyDrvSt"), object: nil)
+        
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.parseGT(notification:)), name: NSNotification.Name(rawValue: "NotifyGT"), object: nil)
     }
     
-    @IBAction func segueToHome(_ sender: Any) {
-        performSegue(withIdentifier: "pairingToHome", sender: nil)
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifySOTP"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyDrvSt"), object: nil)
+//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyGT"), object: nil)
     }
     
     func connectToDevice() -> Void {
-      centralManager?.connect(bluetoothPeripheral!, options: nil)
+
+        stopScanning()
+        centralManager?.connect(bluetoothPeripheral!, options: nil)
+        scanningButton.setTitle("Connecting...", for: .normal)
+        scanningButton.isEnabled = false
+        
+        //User Defaults (for auto-connect to last peripheral)
         let string = String(describing: bluetoothPeripheral.identifier)
         print("string: " + string)
         defaults.setValue(String(describing: bluetoothPeripheral.identifier), forKey: "LastConnectedUUID")
@@ -80,34 +98,41 @@ class ViewController: UIViewController {
        }
 
     func startScanning() -> Void {
+        
         // Remove prior data
         peripheralArray.removeAll()
         rssiArray.removeAll()
+        self.tableView.reloadData()
+        peripheralFoundLabel.text = "Tynt Devices Found: \(peripheralArray.count)"
+        
         // Start Scanning
-        print("Started startScanning");
-        centralManager?.scanForPeripherals(withServices: []) //CBUUIDs.BLEService_UUID])
+        print("Started startScanning")
         scanningButton.setTitle("Scanning...", for: .normal)
         scanningButton.isEnabled = false
-                
-        Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
+        centralManager?.scanForPeripherals(withServices: [])
+
+        Timer.scheduledTimer(withTimeInterval: 5, repeats: false) {_ in
             self.stopScanning()
+            self.scanningButton.setTitle("Scan", for: .normal)
+            self.scanningButton.isEnabled = true
         }
+        
     }
 
-    func scanForBLEDevices() -> Void {
-      // Remove prior data
-      peripheralArray.removeAll()
-      rssiArray.removeAll()
-      // Start Scanning
-        print("Started ScanForBLEDevice");
-      centralManager?.scanForPeripherals(withServices: [] , options: [CBCentralManagerScanOptionAllowDuplicatesKey:true])
-        scanningButton.setTitle("Scanning...", for: .normal)
-        scanningButton.isEnabled = false
-
-      Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
-          self.stopScanning()
-      }
-  }
+//    func scanForBLEDevices() -> Void {
+//      // Remove prior data
+//      peripheralArray.removeAll()
+//      rssiArray.removeAll()
+//      // Start Scanning
+//        print("Started ScanForBLEDevice");
+//      centralManager?.scanForPeripherals(withServices: [] , options: [CBCentralManagerScanOptionAllowDuplicatesKey:true])
+//        scanningButton.setTitle("Scanning...", for: .normal)
+//        scanningButton.isEnabled = false
+//
+//      Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
+//          self.stopScanning()
+//      }
+//  }
 
     func stopTimer() -> Void {
       // Stops Timer
@@ -115,8 +140,6 @@ class ViewController: UIViewController {
     }
 
     func stopScanning() -> Void {
-        scanningButton.setTitle("Scan", for: .normal)
-        scanningButton.isEnabled = true
         centralManager?.stopScan()
     }
 
@@ -134,6 +157,46 @@ class ViewController: UIViewController {
 
     })
   }
+    
+    //MARK: - Parse Functions
+    
+    @objc func parseSOTPerc(notification: Notification) -> Void{
+
+        var text = String(describing: notification.object)
+        text = text.replacingOccurrences(of: "Optional(<", with: "")
+        text = text.replacingOccurrences(of: ">)", with: "")
+
+        print(text)
+
+        let cur = Int(text, radix: 16)!
+        currentTintLevel = cur
+
+    }
+    
+    @objc func parseDrvSt(notification: Notification) -> Void {
+        
+        var text = String(describing: notification.object)
+        text = text.replacingOccurrences(of: "Optional(<", with: "")
+        text = text.replacingOccurrences(of: ">)", with: "")
+        driveState = text
+        
+        print("drive state was updated (pairing)")
+        
+    }
+    
+//    @objc func parseGT(notification: Notification) -> Void {
+//
+//        var text = String(describing: notification.object)
+//        text = text.replacingOccurrences(of: "Optional(<", with: "")
+//        text = text.replacingOccurrences(of: ">)", with: "")
+//
+//        print(text)
+//
+//        let GT = Int(text, radix: 16)!
+//        goalTint = GT
+//
+//        print(GT)
+//    }
 }
 
 // MARK: - CBCentralManagerDelegate
@@ -159,7 +222,8 @@ extension ViewController: CBCentralManagerDelegate {
 
         case .poweredOn:
             print("Is Powered On.")
-            startScanning()
+          startUp = true
+          startScanning()
         case .unsupported:
             print("Is Unsupported.")
         case .unauthorized:
@@ -175,31 +239,34 @@ extension ViewController: CBCentralManagerDelegate {
 
     // MARK: - Discover
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-      print("Function: \(#function),Line: \(#line)")
+      
+        print("Function: \(#function),Line: \(#line)")
 
       bluetoothPeripheral = peripheral
         
-        if let lastUUID = defaults.value(forKey: "LastConnectedUUID") {
-            if String(describing: lastUUID) == String(describing: peripheral.identifier) {
+        if startUp {
+            
+            if let lastUUID = defaults.value(forKey: "LastConnectedUUID") {
+                if String(describing: lastUUID) == String(describing: bluetoothPeripheral.identifier) {
 
-                bluetoothPeripheral.delegate = self
+                    BlePeripheral.connectedPeripheral = bluetoothPeripheral
+                    bluetoothPeripheral.delegate = self
+                    
+                    connectToDevice()
 
-                BlePeripheral.connectedPeripheral = bluetoothPeripheral
+                    self.performSegue(withIdentifier: "pairingToHomeAuto", sender: nil)
 
-                connectToDevice()
-
-                delayedConnection()
+                }
             }
         }
         
-      print("Peripheral found");
         let p_name = peripheral.name ?? ""; //get the name and cast to null if empty
       if peripheralArray.contains(peripheral) {
           print("Duplicate Found.")
       } else if(p_name.contains( "Tynt_Demo")){
         peripheralArray.append(peripheral)
         rssiArray.append(RSSI)
-          peripheralFoundLabel.text = "Peripherals Found: \(peripheralArray.count)"
+          peripheralFoundLabel.text = "Tynt Devices Found: \(peripheralArray.count)"
 
           bluetoothPeripheral.delegate = self
 
@@ -223,7 +290,8 @@ extension ViewController: CBCentralManagerDelegate {
 extension ViewController: CBPeripheralDelegate {
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-
+        
+        
       guard let services = peripheral.services else { return }
       for service in services {
         peripheral.discoverCharacteristics(nil, for: service)
@@ -309,6 +377,9 @@ extension ViewController: CBPeripheralDelegate {
         else if characteristic.uuid.isEqual(CBUUIDs.cService_Characteristic_uuid_GoalTint){
             goalTintChar = characteristic
             BlePeripheral.goalTintChar = goalTintChar
+            //MARK: - reinclude when figured out GT Char parse needs
+//            peripheral.setNotifyValue(true, for: goalTintChar!)
+//            peripheral.readValue(for: characteristic)
             print("Goal Tint Characteristic: \(goalTintChar.uuid)")
         }
         
@@ -348,6 +419,10 @@ extension ViewController: CBPeripheralDelegate {
           
           NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyAccel"), object: char.value! as Data)
       }
+//      else if char == goalTintChar {
+//
+//          NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyGT"), object: char.value! as Data)
+//      }
 
   }
 
@@ -418,7 +493,7 @@ extension ViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-      bluetoothPeripheral = peripheralArray[indexPath.row]
+        bluetoothPeripheral = peripheralArray[indexPath.row]
 
         BlePeripheral.connectedPeripheral = bluetoothPeripheral
 
@@ -431,25 +506,25 @@ extension ViewController: UITableViewDelegate {
     @IBAction func unwindToPairing(segue: UIStoryboardSegue) {}
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         
+        
         if segue.identifier == "pairingToHome" {
             let destVC = segue.destination as? Home_Interface
+
+            if let CTL = currentTintLevel {
+                destVC?.currentTintLevel = CTL
+            }
             
-//            destVC?.currentTintLevel = currentTintLevel
+            if let DRVST = driveState {
+                destVC?.driveState = DRVST
+            }
+            
+//            if let GT = goalTint {
+//                destVC?.goalTintLevel = GT
+//            }
+
         }
+        
     }
     
-    @objc func parseSOTPerc(notification: Notification) -> Void{
-
-        var text = String(describing: notification.object)
-        text = text.replacingOccurrences(of: "Optional(<", with: "")
-        text = text.replacingOccurrences(of: ">)", with: "")
-
-        print(text)
-
-        let cur = Int(text, radix: 16)!
-        currentTintLevel = cur
-
-    }
     
 }
