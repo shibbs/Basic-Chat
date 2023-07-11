@@ -50,9 +50,9 @@ class Data_Interface: UIViewController {
         
         tempLabel.text = "\u{2014}" + "\u{00B0}" + " Celsius"
         humidityLabel.text = "\u{2014}%"
-        intLightLabel.text = "\u{2014} Lumens"
-        extLightLabel.text = "\u{2014} Lumens"
-        extTintedLightLabel.text = "\u{2014} Lumens"
+        intLightLabel.text = "\u{2014} Lux"
+        extLightLabel.text = "\u{2014} Lux"
+        extTintedLightLabel.text = "\u{2014} Lux"
         opticTransLabel.text = "\u{2014}%"
         alertsLabel.text = "\u{2014}"
         coulombCountLabel.text = "\u{2014}%"
@@ -111,18 +111,32 @@ class Data_Interface: UIViewController {
         let extLightBytes = bytes[1]
         let extTintBytes = bytes[2]
         
-        let i = Float(Int(intLightBytes, radix: 16)!)
-        intLight = i / 100
+        intLight = convertALCToInt(bytes: intLightBytes)
+        extLight = convertALCToInt(bytes: extLightBytes)
+        extTintedLight = convertALCToInt(bytes: extTintBytes)
         
-        let e = Float(Int(extLightBytes, radix: 16)!)
-        extLight = e / 100
-        
-        let et = Float(Int(extTintBytes, radix: 16)!)
-        extTintedLight = et / 100
-        
-        let x = (et / e) * 1000
+        let x = (extTintedLight/extLight) * 1000
         opticTrans = (roundf(x) / 10.0)
         
+    }
+    
+    func convertALCToInt(bytes: String) -> Float{
+        
+        let s = Array(bytes)
+        
+        let s1 = String(s[0]) + String(s[1])
+        let s2 = String(s[2]) + String(s[3])
+        let s3 = String(s[4]) + String(s[5])
+        let s4 = String(s[6]) + String(s[7])
+        
+        let a = Int(s1, radix: 16)!
+        let b = Int(s2, radix: 16)!
+        let c = Int(s3, radix: 16)!
+        let d = Int(s4, radix: 16)!
+        
+        let result = Float(a + (b<<8) + (c<<16) + (d<<24))
+        
+        return (result/100)
     }
     
     func update() {
@@ -132,9 +146,9 @@ class Data_Interface: UIViewController {
         
         tempLabel.text = String(temp) + "\u{00B0}" + " C"
         humidityLabel.text = String(Int(humidity)) + "%"
-        intLightLabel.text = String(intLight) + " Lumens"
-        extLightLabel.text = String(extLight) + " Lumens"
-        extTintedLightLabel.text = String(extTintedLight) + " Lumens"
+        intLightLabel.text = String(intLight) + " Lux"
+        extLightLabel.text = String(extLight) + " Lux"
+        extTintedLightLabel.text = String(extTintedLight) + " Lux"
         opticTransLabel.text = String(opticTrans) + "%"
         coulombCountLabel.text = String(Int(coulombCt)) + "%"
         

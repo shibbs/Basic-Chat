@@ -209,18 +209,32 @@ class Home_Interface: UIViewController {
         let extLightBytes = bytes[1]
         let extTintBytes = bytes[2]
         
-        let i = Float(Int(intLightBytes, radix: 16)!)
-        intLight = i / 100
+        intLight = convertALCToInt(bytes: intLightBytes)
+        extLight = convertALCToInt(bytes: extLightBytes)
+        extTintedLight = convertALCToInt(bytes: extTintBytes)
         
-        let e = Float(Int(extLightBytes, radix: 16)!)
-        extLight = e / 100
-        
-        let et = Float(Int(extTintBytes, radix: 16)!)
-        extTintedLight = et / 100
-        
-        let x = (et / e) * 1000
+        let x = (extTintedLight/extLight) * 1000
         opticTrans = (roundf(x) / 10.0)
         
+    }
+    
+    func convertALCToInt(bytes: String) -> Float{
+        
+        let s = Array(bytes)
+        
+        let s1 = String(s[0]) + String(s[1])
+        let s2 = String(s[2]) + String(s[3])
+        let s3 = String(s[4]) + String(s[5])
+        let s4 = String(s[6]) + String(s[7])
+        
+        let a = Int(s1, radix: 16)!
+        let b = Int(s2, radix: 16)!
+        let c = Int(s3, radix: 16)!
+        let d = Int(s4, radix: 16)!
+        
+        let result = Float(a + (b<<8) + (c<<16) + (d<<24))
+        
+        return (result/100)
     }
     
     func disconnected() {
@@ -308,6 +322,8 @@ class Home_Interface: UIViewController {
         text = text.replacingOccurrences(of: "Optional(<", with: "")
         text = text.replacingOccurrences(of: ">)", with: "")
         
+        print(text + " : raw temp char from home")
+        
         let chars = Array(text)
         
         let b1 = String(chars[0]) + String(chars[1])
@@ -316,7 +332,7 @@ class Home_Interface: UIViewController {
         let a = Int(b1, radix: 16)!
         let b = Int(b2, radix: 16)!
         
-        let v = Float(a + (256*b))
+        let v = Float(a + (b<<8))
         temp = v / 10
         
         print(String(temp) + " : tempChar from home")
