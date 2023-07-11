@@ -80,7 +80,7 @@
 		29A1DF3C25CB1D7F000A9A84 = {
 			isa = PBXGroup;
 			children = (
-				29A1DF4725CB1D7F000A9A84 /* Basic Chat MVC */,
+				29A1DF4725CB1D7F000A9A84 /* Delegates */,
 				29A1DF4625CB1D7F000A9A84 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -93,7 +93,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		29A1DF4725CB1D7F000A9A84 /* Basic Chat MVC */ = {
+		29A1DF4725CB1D7F000A9A84 /* Delegates */ = {
 			isa = PBXGroup;
 			children = (
 				29A1DF4825CB1D7F000A9A84 /* AppDelegate.swift */,
@@ -106,7 +106,7 @@
 				29A1DF5325CB1D82000A9A84 /* LaunchScreen.storyboard */,
 				29A1DF5625CB1D82000A9A84 /* Info.plist */,
 			);
-			path = "Basic Chat MVC";
+			path = Delegates;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
