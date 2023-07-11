@@ -217,8 +217,15 @@ class Data_Interface: UIViewController {
         let a = Int(b1, radix: 16)!
         let b = Int(b2, radix: 16)!
         
-        let v = Float(a + (256*b))
-        temp = v / 10
+        let v = a + (b<<8)
+        
+        if v > 32768 {
+            let r = 65536 - v
+            temp = (Float(r) / 10)*(-1)
+        }
+        else {
+            temp = Float(v) / 10
+        }
         
         print(String(temp) + " : tempChar from sensor data")
         
