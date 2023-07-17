@@ -120,21 +120,21 @@ class Home_Interface: UIViewController {
         else if goalTintLevel == nil {
             tintProgress.progress = 0
             slider.value = Float(currentTintLevel)
-            tintValue.text = String(Int(round(slider.value))) + "% Tint"
+            tintValue.text = String(Int(round(slider.value))) + "%"
         }
         
         if driveState == "02" {
-            statusText.text = "Bleaching: " + String(currentTintLevel) + "% Tint"
+            statusText.text = "Bleaching: At " + String(currentTintLevel) + "%"
             tintProgress.isHidden = false
         }
         else if driveState == "01" {
-            statusText.text = "Tinting: " + String(currentTintLevel) + "% Tint"
+            statusText.text = "Tinting: At " + String(currentTintLevel) + "%"
             tintProgress.isHidden = false
         }
         else if driveState == "00" {
-            statusText.text = "Idle"
+            statusText.text = "Idle At "
             slider.value = Float(currentTintLevel)
-            tintValue.text = String(currentTintLevel) + "% Tint"
+            tintValue.text = String(currentTintLevel) + "%"
             tintProgress.progress = 0
             tintProgress.isHidden = true
         }
@@ -148,7 +148,7 @@ class Home_Interface: UIViewController {
     }
     
     @IBAction func writeValueToInterface(_ sender: UISlider) {
-        tintValue.text = String(Int(round(slider.value))) + "% Tint"
+        tintValue.text = "Goal: " + String(Int(round(slider.value))) + "%"
     }
     
     @IBAction func valueOut(_ sender: Any) {
@@ -171,7 +171,7 @@ class Home_Interface: UIViewController {
             if val != self.currentTintLevel {
                         
                 self.tintProgress.progress = 0
-                self.driveState = "03"
+//                self.driveState = "03"
                 self.goalTintLevel = val
                 self.tintProgressLength = abs(self.goalTintLevel - cur)
                         
