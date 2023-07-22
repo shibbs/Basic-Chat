@@ -62,6 +62,7 @@ class ViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.parseDrvSt(notification:)), name: NSNotification.Name(rawValue: "NotifyDrvSt"), object: nil)
         
+        //MARK: -> GTChar Infrastructure
 //        NotificationCenter.default.addObserver(self, selector: #selector(self.parseGT(notification:)), name: NSNotification.Name(rawValue: "NotifyGT"), object: nil)
     }
     
@@ -183,6 +184,8 @@ class ViewController: UIViewController {
         print("drive state was updated (pairing)")
         
     }
+    
+    //MARK: -> GTChar Infrastructure
     
 //    @objc func parseGT(notification: Notification) -> Void {
 //
@@ -377,9 +380,11 @@ extension ViewController: CBPeripheralDelegate {
         else if characteristic.uuid.isEqual(CBUUIDs.cService_Characteristic_uuid_GoalTint){
             goalTintChar = characteristic
             BlePeripheral.goalTintChar = goalTintChar
-            //MARK: - reinclude when figured out GT Char parse needs
+            
+            //MARK: -> GTChar Infrastructure
 //            peripheral.setNotifyValue(true, for: goalTintChar!)
 //            peripheral.readValue(for: characteristic)
+            
             print("Goal Tint Characteristic: \(goalTintChar.uuid)")
         }
         
@@ -419,6 +424,7 @@ extension ViewController: CBPeripheralDelegate {
           
           NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyAccel"), object: char.value! as Data)
       }
+      //MARK: -> GTChar Infrastructure
 //      else if char == goalTintChar {
 //
 //          NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyGT"), object: char.value! as Data)
@@ -517,7 +523,7 @@ extension ViewController: UITableViewDelegate {
             if let DRVST = driveState {
                 destVC?.driveState = DRVST
             }
-            
+            //MARK: -> GTChar Infrastructure
 //            if let GT = goalTint {
 //                destVC?.goalTintLevel = GT
 //            }

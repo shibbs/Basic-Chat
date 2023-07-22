@@ -229,9 +229,6 @@ class Data_Interface: UIViewController {
         
         print(String(temp) + " : tempChar from sensor data")
         
-        
-        //MARK: - Handle Signed Bits Accordingly
-        
     }
     
     @objc func parseHumidityChar(notification: Notification) -> Void {
@@ -311,6 +308,7 @@ class Data_Interface: UIViewController {
         case.connected:
             var val: Int!
             
+            //MARK: -> ATSChar (remove [autoTintChar = "xx"] in both lines)
             if self.autoTintSwitch.isOn { val = 1 ; autoTintChar = "01" }
             else if !self.autoTintSwitch.isOn { val = 0 ; autoTintChar = "00"}
             

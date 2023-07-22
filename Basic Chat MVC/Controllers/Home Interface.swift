@@ -110,12 +110,13 @@ class Home_Interface: UIViewController {
     func update() {
         
         if currentTintLevel != -1 {
-            
             slider.isEnabled = true
         }
         
         if goalTintLevel != nil {
-            tintProgress.progress = ( 1 - ((Float(abs(goalTintLevel - currentTintLevel)) / Float(tintProgressLength!))))
+            if goalTintLevel != currentTintLevel {
+                tintProgress.progress = ( 1 - ((Float(abs(goalTintLevel - currentTintLevel)) / Float(tintProgressLength!))))
+            }
         }
         else if goalTintLevel == nil {
             tintProgress.progress = 0
@@ -264,6 +265,7 @@ class Home_Interface: UIViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.parseAccelChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAccel"), object: nil)
         
+        //MARK: -> GTChar Infrastructure
 //        NotificationCenter.default.addObserver(self, selector: #selector(self.parseGT(notification:)), name: NSNotification.Name(rawValue: "NotifyGT"), object: nil)
     }
     
@@ -275,6 +277,7 @@ class Home_Interface: UIViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifySOTP"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyAccel"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyDrvSt"), object: nil)
+        //MARK: -> GTChar Infrastructure
 //        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyGT"), object: nil)
     }
     
@@ -383,6 +386,7 @@ class Home_Interface: UIViewController {
         print(text + " : accelChar from home")
     }
     
+    //MARK: -> GTChar Infrastructure
 //    @objc func parseGT(notification: Notification) -> Void {
 //
 //        var text = String(describing: notification.object)
