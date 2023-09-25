@@ -1,6 +1,7 @@
 {
-  "colors" : [
+  "images" : [
     {
+      "filename" : "tynt-wordmark-green.png",
       "idiom" : "universal"
     }
   ],

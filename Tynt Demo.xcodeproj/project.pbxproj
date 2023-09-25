@@ -7,31 +7,35 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		15F8D55C2A493E4D00D29094 /* Data Interface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15F8D55B2A493E4D00D29094 /* Data Interface.swift */; };
 		29A1DF4925CB1D7F000A9A84 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A1DF4825CB1D7F000A9A84 /* AppDelegate.swift */; };
 		29A1DF4B25CB1D7F000A9A84 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A1DF4A25CB1D7F000A9A84 /* SceneDelegate.swift */; };
-		29A1DF4D25CB1D7F000A9A84 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A1DF4C25CB1D7F000A9A84 /* ViewController.swift */; };
+		29A1DF4D25CB1D7F000A9A84 /* Pairing Interface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A1DF4C25CB1D7F000A9A84 /* Pairing Interface.swift */; };
 		29A1DF5025CB1D7F000A9A84 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 29A1DF4E25CB1D7F000A9A84 /* Main.storyboard */; };
 		29A1DF5225CB1D82000A9A84 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29A1DF5125CB1D82000A9A84 /* Assets.xcassets */; };
 		29A1DF5525CB1D82000A9A84 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 29A1DF5325CB1D82000A9A84 /* LaunchScreen.storyboard */; };
 		29A1DF6225CBA309000A9A84 /* CBUUIDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A1DF6125CBA309000A9A84 /* CBUUIDs.swift */; };
 		29A1DF6725CBB6E4000A9A84 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A1DF6625CBB6E4000A9A84 /* TableViewCell.swift */; };
-		29A1DF7025CF0560000A9A84 /* ConsoleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A1DF6F25CF0560000A9A84 /* ConsoleViewController.swift */; };
+		29A1DF7025CF0560000A9A84 /* Console Interface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A1DF6F25CF0560000A9A84 /* Console Interface.swift */; };
 		29DEAA1225D9A787002AECEC /* BlePeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DEAA1125D9A787002AECEC /* BlePeripheral.swift */; };
+		DCD3C1532A368A230000397F /* Home Interface.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD3C1522A368A230000397F /* Home Interface.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		29A1DF4525CB1D7F000A9A84 /* Basic Chat MVC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Basic Chat MVC.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		15F8D55B2A493E4D00D29094 /* Data Interface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data Interface.swift"; sourceTree = "<group>"; };
+		29A1DF4525CB1D7F000A9A84 /* Tynt Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tynt Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		29A1DF4825CB1D7F000A9A84 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		29A1DF4A25CB1D7F000A9A84 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		29A1DF4C25CB1D7F000A9A84 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		29A1DF4C25CB1D7F000A9A84 /* Pairing Interface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Pairing Interface.swift"; sourceTree = "<group>"; };
 		29A1DF4F25CB1D7F000A9A84 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		29A1DF5125CB1D82000A9A84 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		29A1DF5425CB1D82000A9A84 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		29A1DF5625CB1D82000A9A84 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		29A1DF6125CBA309000A9A84 /* CBUUIDs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBUUIDs.swift; sourceTree = "<group>"; };
 		29A1DF6625CBB6E4000A9A84 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
-		29A1DF6F25CF0560000A9A84 /* ConsoleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleViewController.swift; sourceTree = "<group>"; };
+		29A1DF6F25CF0560000A9A84 /* Console Interface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Console Interface.swift"; sourceTree = "<group>"; };
 		29DEAA1125D9A787002AECEC /* BlePeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlePeripheral.swift; sourceTree = "<group>"; };
+		DCD3C1522A368A230000397F /* Home Interface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Home Interface.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,8 +61,10 @@
 		2970B39325DF555D001CF3CF /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				29A1DF4C25CB1D7F000A9A84 /* ViewController.swift */,
-				29A1DF6F25CF0560000A9A84 /* ConsoleViewController.swift */,
+				29A1DF4C25CB1D7F000A9A84 /* Pairing Interface.swift */,
+				29A1DF6F25CF0560000A9A84 /* Console Interface.swift */,
+				DCD3C1522A368A230000397F /* Home Interface.swift */,
+				15F8D55B2A493E4D00D29094 /* Data Interface.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -82,7 +88,7 @@
 		29A1DF4625CB1D7F000A9A84 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				29A1DF4525CB1D7F000A9A84 /* Basic Chat MVC.app */,
+				29A1DF4525CB1D7F000A9A84 /* Tynt Demo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -106,9 +112,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		29A1DF4425CB1D7F000A9A84 /* Basic Chat MVC */ = {
+		29A1DF4425CB1D7F000A9A84 /* Tynt Demo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 29A1DF5925CB1D82000A9A84 /* Build configuration list for PBXNativeTarget "Basic Chat MVC" */;
+			buildConfigurationList = 29A1DF5925CB1D82000A9A84 /* Build configuration list for PBXNativeTarget "Tynt Demo" */;
 			buildPhases = (
 				29A1DF4125CB1D7F000A9A84 /* Sources */,
 				29A1DF4225CB1D7F000A9A84 /* Frameworks */,
@@ -118,9 +124,9 @@
 			);
 			dependencies = (
 			);
-			name = "Basic Chat MVC";
+			name = "Tynt Demo";
 			productName = "Basic Chat MVC";
-			productReference = 29A1DF4525CB1D7F000A9A84 /* Basic Chat MVC.app */;
+			productReference = 29A1DF4525CB1D7F000A9A84 /* Tynt Demo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -137,7 +143,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 29A1DF4025CB1D7F000A9A84 /* Build configuration list for PBXProject "Basic Chat MVC" */;
+			buildConfigurationList = 29A1DF4025CB1D7F000A9A84 /* Build configuration list for PBXProject "Tynt Demo" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -150,7 +156,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				29A1DF4425CB1D7F000A9A84 /* Basic Chat MVC */,
+				29A1DF4425CB1D7F000A9A84 /* Tynt Demo */,
 			);
 		};
 /* End PBXProject section */
@@ -173,12 +179,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				29A1DF4D25CB1D7F000A9A84 /* ViewController.swift in Sources */,
+				29A1DF4D25CB1D7F000A9A84 /* Pairing Interface.swift in Sources */,
 				29A1DF4925CB1D7F000A9A84 /* AppDelegate.swift in Sources */,
 				29A1DF6225CBA309000A9A84 /* CBUUIDs.swift in Sources */,
-				29A1DF7025CF0560000A9A84 /* ConsoleViewController.swift in Sources */,
+				15F8D55C2A493E4D00D29094 /* Data Interface.swift in Sources */,
+				29A1DF7025CF0560000A9A84 /* Console Interface.swift in Sources */,
 				29A1DF6725CBB6E4000A9A84 /* TableViewCell.swift in Sources */,
 				29A1DF4B25CB1D7F000A9A84 /* SceneDelegate.swift in Sources */,
+				DCD3C1532A368A230000397F /* Home Interface.swift in Sources */,
 				29DEAA1225D9A787002AECEC /* BlePeripheral.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -328,14 +336,17 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2X94RM7457;
+				DEVELOPMENT_TEAM = MGBUQ7Y8U7;
 				INFOPLIST_FILE = "Basic Chat MVC/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Tynt;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Adafruit.Industries.Basic-Chat";
+				PRODUCT_BUNDLE_IDENTIFIER = FunctionalDesign.TyntBLE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -349,14 +360,17 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2X94RM7457;
+				DEVELOPMENT_TEAM = MGBUQ7Y8U7;
 				INFOPLIST_FILE = "Basic Chat MVC/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Tynt;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Adafruit.Industries.Basic-Chat";
+				PRODUCT_BUNDLE_IDENTIFIER = FunctionalDesign.TyntBLE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -366,7 +380,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		29A1DF4025CB1D7F000A9A84 /* Build configuration list for PBXProject "Basic Chat MVC" */ = {
+		29A1DF4025CB1D7F000A9A84 /* Build configuration list for PBXProject "Tynt Demo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				29A1DF5725CB1D82000A9A84 /* Debug */,
@@ -375,7 +389,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		29A1DF5925CB1D82000A9A84 /* Build configuration list for PBXNativeTarget "Basic Chat MVC" */ = {
+		29A1DF5925CB1D82000A9A84 /* Build configuration list for PBXNativeTarget "Tynt Demo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				29A1DF5A25CB1D82000A9A84 /* Debug */,

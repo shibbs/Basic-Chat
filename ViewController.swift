@@ -1,9 +1,5 @@
-  //
-  //  ViewController.swift
-  //  Basic Chat
-  //
-  //  Created by Trevor Beaton on 2/3/21.
-  //
+  
+  // associated with "Pairing Interface"
 
   import UIKit
   import CoreBluetooth
@@ -22,15 +18,17 @@
       // UI
       @IBOutlet weak var tableView: UITableView!
       @IBOutlet weak var peripheralFoundLabel: UILabel!
-      @IBOutlet weak var scanningLabel: UILabel!
       @IBOutlet weak var scanningButton: UIButton!
-
+      @IBOutlet weak var backButton: UIButton!
+      
       @IBAction func scanningAction(_ sender: Any) {
       startScanning()
     }
 
       override func viewDidLoad() {
         super.viewDidLoad()
+          
+          backButton.setTitle("", for: .normal)
 
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -66,8 +64,9 @@
           peripheralArray.removeAll()
           rssiArray.removeAll()
           // Start Scanning
-          centralManager?.scanForPeripherals(withServices: [CBUUIDs.BLEService_UUID])
-          scanningLabel.text = "Scanning..."
+          print("Started startScanning");
+          centralManager?.scanForPeripherals(withServices: []) //CBUUIDs.BLEService_UUID])
+          scanningButton.setTitle("Scanning...", for: .normal)
           scanningButton.isEnabled = false
           Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
               self.stopScanning()
@@ -79,8 +78,10 @@
         peripheralArray.removeAll()
         rssiArray.removeAll()
         // Start Scanning
+          print("Started ScanForBLEDevice");
         centralManager?.scanForPeripherals(withServices: [] , options: [CBCentralManagerScanOptionAllowDuplicatesKey:true])
-        scanningLabel.text = "Scanning..."
+          scanningButton.setTitle("Scanning...", for: .normal)
+          scanningButton.isEnabled = false
 
         Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
             self.stopScanning()
@@ -93,7 +94,7 @@
       }
 
       func stopScanning() -> Void {
-          scanningLabel.text = ""
+          scanningButton.setTitle("Scan", for: .normal)
           scanningButton.isEnabled = true
           centralManager?.stopScan()
       }
@@ -107,8 +108,9 @@
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
 
         let detailViewController = storyboard.instantiateViewController(withIdentifier: "ConsoleViewController") as! ConsoleViewController
+          
+          self.performSegue(withIdentifier: "unwindToSettings", sender: nil)
 
-        self.navigationController?.pushViewController(detailViewController, animated: true)
       })
     }
   }
@@ -155,21 +157,23 @@
         print("Function: \(#function),Line: \(#line)")
 
         bluefruitPeripheral = peripheral
-
+        print("Peripheral found");
+          let p_name = peripheral.name ?? ""; //get the name and cast to null if empty
         if peripheralArray.contains(peripheral) {
             print("Duplicate Found.")
-        } else {
+        } else if(p_name.contains( "Tynt_Demo")){
           peripheralArray.append(peripheral)
           rssiArray.append(RSSI)
+            peripheralFoundLabel.text = "Peripherals Found: \(peripheralArray.count)"
+
+            bluefruitPeripheral.delegate = self
+
+            print("Peripheral Discovered: \(peripheral)")
+
+            self.tableView.reloadData()
         }
 
-        peripheralFoundLabel.text = "Peripherals Found: \(peripheralArray.count)"
-
-        bluefruitPeripheral.delegate = self
-
-        print("Peripheral Discovered: \(peripheral)")
-
-        self.tableView.reloadData()
+        
       }
 
       // MARK: - Connect
@@ -202,7 +206,7 @@
 
       for characteristic in characteristics {
 
-        if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Rx)  {
+        if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Goal_Perc)  {
 
           rxCharacteristic = characteristic
 
@@ -214,11 +218,13 @@
           print("RX Characteristic: \(rxCharacteristic.uuid)")
         }
 
-        if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Tx){
+        if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_SOT_Perc){
           txCharacteristic = characteristic
           BlePeripheral.connectedTXChar = txCharacteristic
           print("TX Characteristic: \(txCharacteristic.uuid)")
         }
+          
+          
       }
       delayedConnection()
    }
@@ -236,9 +242,10 @@
 
         characteristicASCIIValue = ASCIIstring
 
-      print("Value Recieved: \((characteristicASCIIValue as String))")
+        print("Value Recieved: ");
+        print(characteristicValue);
 
-      NotificationCenter.default.post(name:NSNotification.Name(rawValue: "Notify"), object: "\((characteristicASCIIValue as String))")
+      NotificationCenter.default.post(name:NSNotification.Name(rawValue: "Notify"), object: characteristicValue as Data)
     }
 
     func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
@@ -315,5 +322,8 @@
           connectToDevice()
 
       }
+      
+      // MARK: - Navigation
+      
   }
 
