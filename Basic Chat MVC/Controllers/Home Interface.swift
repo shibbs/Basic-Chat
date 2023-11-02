@@ -21,9 +21,19 @@ class Home_Interface: UIViewController {
     @IBOutlet weak var tintValue: UILabel!
     @IBOutlet weak var tintProgress: UIProgressView!
     
+    
+    @IBOutlet weak var motorValue: UILabel!
+    
+    @IBOutlet weak var zeroPerc: UIButton!
+    @IBOutlet weak var fiftyPerc: UIButton!
+    @IBOutlet weak var hundredPerc: UIButton!
+    
+    
     var goalTintLevel: Int!
     var tintProgressLength: Int!
     var currentTintLevel = -1
+    var currentMotorOpen = -1
+    var goalMotorOpen: Int!
     
     var driveState: String! = ""
     var autoTintChar: String! = ""
@@ -107,11 +117,26 @@ class Home_Interface: UIViewController {
         }
     }
     
+    func writeOutgoingMotorValue(value: inout Int) {
+        let data = Data(bytes: &value, count: 1)
+        
+        if let blePeripheral = BlePeripheral.connectedPeripheral {
+            if let goalMotorChar = BlePeripheral.goalMotorChar {
+                blePeripheral.writeValue(data, for: goalMotorChar, type: CBCharacteristicWriteType.withResponse)
+            }
+        }
+    }
+    
     func update() {
         
         if currentTintLevel != -1 {
             
             slider.isEnabled = true
+        }
+        if currentMotorOpen != -1 {
+            zeroPerc.isEnabled = true
+            fiftyPerc.isEnabled = true
+            hundredPerc.isEnabled = true
         }
         
         if goalTintLevel != nil {
@@ -122,6 +147,15 @@ class Home_Interface: UIViewController {
             slider.value = Float(currentTintLevel)
             tintValue.text = String(Int(round(slider.value))) + "%"
         }
+        
+        //TODO
+//        if goalMotorOpen != nil {
+//            
+//        }
+//        if goalMotorOpen != nil {
+//            motorValue.text = String(Int(currentMotorOpen)) + "%"
+//        }
+        motorValue.text = String(Int(currentMotorOpen)) + "%"
         
         if driveState == "02" {
             statusText.text = "Bleaching: At " + String(currentTintLevel) + "%"
@@ -139,11 +173,17 @@ class Home_Interface: UIViewController {
             tintProgress.isHidden = true
         }
         else if driveState == "03" {
-            statusText.text = "Working..."
+            //statusText.text = "Working..."
             tintProgress.isHidden = true
+            motorValue.text = "Opening: At " + String(currentMotorOpen) + "%"
+        }
+        else if driveState == "04" {
+            tintProgress.isHidden = true
+            motorValue.text = "Closing: At " + String(currentMotorOpen) + "%"
         }
         
         print("updated (home interface)")
+        //print("goal motor open: \(goalMotorOpen)")
         
     }
     
@@ -177,11 +217,118 @@ class Home_Interface: UIViewController {
                         
                 self.writeOutgoingValue(value: &val)
             }
+            //print("Val: \(val)")
         @unknown default:
             print("Unknown error")
         }
     
     }
+    
+    
+    @IBAction func motorZero(_ sender: Any) {
+        switch BlePeripheral.connectedPeripheral!.state {
+        case .disconnected:
+            self.disconnected()
+        case .disconnecting:
+            self.disconnected()
+        case .connecting:
+            print("Still connecting")
+        case.connected:
+            self.slider.isEnabled = true
+            self.sensorData.isEnabled = true
+            self.pairing.isEnabled = true
+            self.zeroPerc.isEnabled = true
+            self.fiftyPerc.isEnabled = true
+            self.hundredPerc.isEnabled = true
+            
+            var val = Int(1)
+            let cur = Int(self.currentMotorOpen)
+                    
+            if val != self.currentMotorOpen {
+                        
+                //self.tintProgress.progress = 0
+//                self.driveState = "03"
+                self.goalMotorOpen = val
+                //self.tintProgressLength = abs(self.goalTintLevel - cur)
+                        
+                self.writeOutgoingMotorValue(value: &val)
+            }
+            //print("Val: \(val)")
+        @unknown default:
+            print("Unknown error")
+        }
+    }
+    
+    
+    @IBAction func motorFifty(_ sender: Any) {
+        switch BlePeripheral.connectedPeripheral!.state {
+        case .disconnected:
+            self.disconnected()
+        case .disconnecting:
+            self.disconnected()
+        case .connecting:
+            print("Still connecting")
+        case.connected:
+            self.slider.isEnabled = true
+            self.sensorData.isEnabled = true
+            self.pairing.isEnabled = true
+            self.zeroPerc.isEnabled = true
+            self.fiftyPerc.isEnabled = true
+            self.hundredPerc.isEnabled = true
+            
+            var val = Int(50)
+            let cur = Int(self.currentMotorOpen)
+                    
+            if val != self.currentMotorOpen {
+                        
+                //self.tintProgress.progress = 0
+//                self.driveState = "03"
+                self.goalMotorOpen = val
+                //self.tintProgressLength = abs(self.goalTintLevel - cur)
+                        
+                self.writeOutgoingMotorValue(value: &val)
+            }
+            //print("Val: \(val)")
+        @unknown default:
+            print("Unknown error")
+        }
+    }
+    
+    
+    @IBAction func motorHundred(_ sender: Any) {
+        switch BlePeripheral.connectedPeripheral!.state {
+        case .disconnected:
+            self.disconnected()
+        case .disconnecting:
+            self.disconnected()
+        case .connecting:
+            print("Still connecting")
+        case.connected:
+            self.slider.isEnabled = true
+            self.sensorData.isEnabled = true
+            self.pairing.isEnabled = true
+            self.zeroPerc.isEnabled = true
+            self.fiftyPerc.isEnabled = true
+            self.hundredPerc.isEnabled = true
+            
+            var val = Int(100)
+            let cur = Int(self.currentMotorOpen)
+                    
+            if val != self.currentMotorOpen {
+                        
+                //self.tintProgress.progress = 0
+//                self.driveState = "03"
+                self.goalMotorOpen = val
+                //self.tintProgressLength = abs(self.goalTintLevel - cur)
+                        
+                self.writeOutgoingMotorValue(value: &val)
+            }
+            //print("Val: \(val)")
+        @unknown default:
+            print("Unknown error")
+        }
+    }
+    
     
     @IBAction func sensorDataPressed(_ sender: Any) {
         
@@ -240,6 +387,9 @@ class Home_Interface: UIViewController {
     func disconnected() {
         slider.isEnabled = false
         sensorData.isEnabled = false
+        zeroPerc.isEnabled = false
+        fiftyPerc.isEnabled = false
+        hundredPerc.isEnabled = false
         pairing.isEnabled = true
         tintProgress.isHidden = true
         tintValue.text = "\u{2014}% Tint"
@@ -264,6 +414,8 @@ class Home_Interface: UIViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.parseAccelChar(notification:)), name: NSNotification.Name(rawValue: "NotifyAccel"), object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseMOPerc(notification:)), name: NSNotification.Name(rawValue: "NotifyMOP"), object: nil)
+        
 //        NotificationCenter.default.addObserver(self, selector: #selector(self.parseGT(notification:)), name: NSNotification.Name(rawValue: "NotifyGT"), object: nil)
     }
     
@@ -275,6 +427,7 @@ class Home_Interface: UIViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifySOTP"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyAccel"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyDrvSt"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyMOP"), object: nil)
 //        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyGT"), object: nil)
     }
     
@@ -293,6 +446,21 @@ class Home_Interface: UIViewController {
         
         print(text + " : SOT from home")
         
+    }
+    
+    @objc func parseMOPerc(notification: Notification) -> Void{
+        var text = String(describing: notification.object)
+        text = text.replacingOccurrences(of: "Optional(<", with: "")
+        text = text.replacingOccurrences(of: ">)", with: "")
+        
+        let cur = Int(text, radix: 16)!
+        currentMotorOpen = cur
+        
+        zeroPerc.isEnabled = true
+        fiftyPerc.isEnabled = true
+        hundredPerc.isEnabled = true
+        
+        print(text + " : MOP from home")
     }
     
     @objc func parseDrvSt(notification: Notification) -> Void {

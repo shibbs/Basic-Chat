@@ -336,7 +336,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = MGBUQ7Y8U7;
+				DEVELOPMENT_TEAM = ABHA387ZUK;
 				INFOPLIST_FILE = "Basic Chat MVC/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Tynt;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
@@ -346,7 +346,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1;
-				PRODUCT_BUNDLE_IDENTIFIER = FunctionalDesign.TyntBLE;
+				PRODUCT_BUNDLE_IDENTIFIER = TestDemoTyntBLE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -360,7 +360,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = MGBUQ7Y8U7;
+				DEVELOPMENT_TEAM = ABHA387ZUK;
 				INFOPLIST_FILE = "Basic Chat MVC/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Tynt;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
@@ -370,7 +370,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1;
-				PRODUCT_BUNDLE_IDENTIFIER = FunctionalDesign.TyntBLE;
+				PRODUCT_BUNDLE_IDENTIFIER = TestDemoTyntBLE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
