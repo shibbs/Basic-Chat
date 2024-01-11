@@ -241,7 +241,7 @@ class Home_Interface: UIViewController {
             self.fiftyPerc.isEnabled = true
             self.hundredPerc.isEnabled = true
             
-            var val = Int(1)
+            var val = Int(0)
             let cur = Int(self.currentMotorOpen)
                     
             if val != self.currentMotorOpen {
