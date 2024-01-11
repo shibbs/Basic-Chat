@@ -19,12 +19,15 @@ class ViewController: UIViewController {
     private var SOTChar: CBCharacteristic!
     private var DrvStChar: CBCharacteristic!
     private var autoTintChar: CBCharacteristic!
+    private var motorOpenChar: CBCharacteristic!
+    private var goalMotorChar: CBCharacteristic!
     private var tempChar: CBCharacteristic!
     private var humidityChar: CBCharacteristic!
     private var ambLightChar: CBCharacteristic!
     private var accelChar: CBCharacteristic!
     
     var currentTintLevel: Int!
+    var currentMotorLevel: Int!
     var driveState: String!
 //    var goalTint: Int!
     
@@ -62,13 +65,17 @@ class ViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.parseDrvSt(notification:)), name: NSNotification.Name(rawValue: "NotifyDrvSt"), object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(self.parseMOPerc(notification:)), name: NSNotification.Name(rawValue: "NotifyMOP"), object: nil)
+        
 //        NotificationCenter.default.addObserver(self, selector: #selector(self.parseGT(notification:)), name: NSNotification.Name(rawValue: "NotifyGT"), object: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifySOTP"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyDrvSt"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyMOP"), object: nil)
 //        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("NotifyGT"), object: nil)
+        // "Notify GMO"
     }
     
     func connectToDevice() -> Void {
@@ -173,6 +180,17 @@ class ViewController: UIViewController {
 
     }
     
+    @objc func parseMOPerc(notification: Notification) -> Void{
+        var text = String(describing: notification.object)
+        text = text.replacingOccurrences(of: "Optional(<", with: "")
+        text = text.replacingOccurrences(of: ">)", with: "")
+        
+        print(text)
+        
+        let cur = Int(text, radix: 16)!
+        currentMotorLevel = cur
+    }
+    
     @objc func parseDrvSt(notification: Notification) -> Void {
         
         var text = String(describing: notification.object)
@@ -263,7 +281,7 @@ extension ViewController: CBCentralManagerDelegate {
         let p_name = peripheral.name ?? ""; //get the name and cast to null if empty
       if peripheralArray.contains(peripheral) {
           print("Duplicate Found.")
-      } else if(p_name.contains( "Tynt_Demo")){
+      } else if(p_name.contains( "Tynt")){
         peripheralArray.append(peripheral)
         rssiArray.append(RSSI)
           peripheralFoundLabel.text = "Tynt Devices Found: \(peripheralArray.count)"
@@ -342,6 +360,14 @@ extension ViewController: CBPeripheralDelegate {
             print("Auto Tint Characteristic: \(autoTintChar.uuid)")
         }
         
+        else if characteristic.uuid.isEqual(CBUUIDs.cService_Characteristic_uuid_MotorOpen){
+            motorOpenChar = characteristic
+            BlePeripheral.motorOpenChar = motorOpenChar
+            peripheral.setNotifyValue(true, for: motorOpenChar!)
+            peripheral.readValue(for: characteristic)
+            print("Motor Open Characteristic: \(motorOpenChar.uuid)")
+        }
+        
         else if characteristic.uuid.isEqual(CBUUIDs.sService_Characteristic_uuid_Temp){
             tempChar = characteristic
             BlePeripheral.tempChar = tempChar
@@ -383,6 +409,14 @@ extension ViewController: CBPeripheralDelegate {
             print("Goal Tint Characteristic: \(goalTintChar.uuid)")
         }
         
+        else if characteristic.uuid.isEqual(CBUUIDs.cService_Characteristic_uuid_GoalMotorOpen){
+            goalMotorChar = characteristic
+            BlePeripheral.goalMotorChar = goalMotorChar
+//            peripheral.setNotifyValue(true, for: motorOpenChar!)
+//            peripheral.readValue(for: characteristic)
+            print("Goal Motor Characteristic: \(goalMotorChar.uuid)")
+        }
+        
     }
     delayedConnection()
  }
@@ -402,6 +436,10 @@ extension ViewController: CBPeripheralDelegate {
       else if char == autoTintChar {
           
           NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyATS"), object: char.value! as Data)
+      }
+      else if char == motorOpenChar {
+          
+          NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyMOP"), object: char.value! as Data)
       }
       else if char == tempChar {
           
@@ -423,6 +461,8 @@ extension ViewController: CBPeripheralDelegate {
 //
 //          NotificationCenter.default.post(name:NSNotification.Name(rawValue: "NotifyGT"), object: char.value! as Data)
 //      }
+
+      // else if char == goalMotorChar
 
   }
 
